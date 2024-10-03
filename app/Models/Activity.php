@@ -17,5 +17,9 @@ class Activity extends Model
         'max_capacity',
         'start_date',
     ];
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 
 }

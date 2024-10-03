@@ -19,6 +19,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'surname',
+        'age',
         'email',
         'password',
     ];
@@ -32,6 +34,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class);
+    }
 
     /**
      * Get the attributes that should be cast.
