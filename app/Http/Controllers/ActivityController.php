@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ActivityFormRequest;
 use App\Models\Activity;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -38,4 +39,18 @@ class ActivityController extends Controller
         }
     }
 
+    public function joinActivity(User $user, Activity $activity)
+    {
+        if ($activity->users()->where('user_id', $user->id)->exists()) {
+            return response()->json([
+                'message' => 'User is already joined to this activity',
+            ], 409);
+        }
+
+        $activity->users()->attach($user->id);
+
+        return response()->json([
+            'message' => 'User joined the activity successfully',
+        ]);
+    }
 }
