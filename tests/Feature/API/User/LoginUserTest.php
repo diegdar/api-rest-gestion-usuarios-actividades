@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Http\Controllers\LoginController;
@@ -9,7 +11,6 @@ use Tests\TestCase;
 
 class LoginUserTest extends TestCase
 {
-
     use DatabaseTransactions;
 
     protected function setUp(): void

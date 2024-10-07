@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     ActivityController,
+    LoginController,
     RegisterController,
     UserController,
 };
@@ -26,7 +27,7 @@ use App\Http\Controllers\{
 
 // Rutas de registro y login
 Route::post('/register', [RegisterController::class, 'register'])->name('user.register');
-Route::post('/login', [RegisterController::class, 'login'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('user.login');
 
 
 Route::prefix('/appActivities')->group(function () {
@@ -46,12 +47,9 @@ Route::prefix('/appActivities')->group(function () {
     Route::post('/activity', [ActivityController::class, 'store'])->name('activity.create');
     Route::get('/activity/{activity}', [ActivityController::class, 'show'])->name('activity.details');
 
-    
+
     // Importacion y exportacion actividades
     Route::get('/export/activities', [ActivityController::class, 'exportActivities'])->name('activities.export');
     Route::post('/import/activities', [ActivityController::class, 'importActivities'])->name('activities.import');
 
 });
-
-
-
