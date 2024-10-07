@@ -9,6 +9,7 @@ use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ActivityController extends Controller
@@ -53,4 +54,39 @@ class ActivityController extends Controller
             'message' => 'User joined the activity successfully',
         ]);
     }
+
+    public function exportActivities()
+    {
+        $activities = Activity::all();
+
+        return response()->json($activities);
+    }
+
+    private function handleFileUpload(Request $request): array
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:json',
+        ]);
+
+        $json = file_get_contents($request->file('file')->getRealPath());
+
+        return json_decode($json, true);
+    }
+
+    private function storeActivities(array $activities): void
+    {
+        foreach ($activities as $activity) {
+            Activity::create($activity);
+        }
+    }
+
+    public function importActivities(Request $request)
+    {
+        $activities = $this->handleFileUpload($request);
+
+        $this->storeActivities($activities);
+
+        return response()->json(['message' => 'Actividades importadas con éxito']);
+    }
+
 }
