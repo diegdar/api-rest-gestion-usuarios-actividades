@@ -42,11 +42,9 @@ Route::middleware('auth:api')->prefix('/appActivities')->group(function () {
         Route::post('/{user}/activities/{activity}', [ActivityController::class, 'joinActivity'])->name('user.activity.join');
     });
 
-
     // Rutas de actividades
     Route::post('/activity', [ActivityController::class, 'store'])->name('activity.create');
     Route::get('/activity/{activity}', [ActivityController::class, 'show'])->name('activity.details');
-
 
     // Importacion y exportacion actividades
     Route::get('/export/activities', [ActivityController::class, 'exportActivities'])->name('activities.export');

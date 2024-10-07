@@ -34,11 +34,13 @@ class GetActivityDetailsTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            'id' => $this->activity->id,
-            'name' => $this->activity->name,
-            'description' => $this->activity->description,
-            'max_capacity' => $this->activity->max_capacity,
-            'start_date' => $this->activity->start_date->toDateString(),
+            'activityData' => [
+                'id' => $this->activity->id,
+                'name' => $this->activity->name,
+                'description' => $this->activity->description,
+                'max_capacity' => $this->activity->max_capacity,
+                'start_date' => $this->activity->start_date->format('Y-m-d')
+            ],
         ]);
     }
 
@@ -56,11 +58,12 @@ class GetActivityDetailsTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
             'Accept' => 'application/json',
-        ])->getJson(route('activity.details', [999999]));
+        ])->getJson(route('activity.details', 999999));
 
         $response->assertStatus(404);
         $response->assertJson([
             'message' => 'Activity not found',
         ]);
     }
+
 }
