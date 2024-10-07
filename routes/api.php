@@ -30,7 +30,7 @@ Route::post('/register', [RegisterController::class, 'register'])->name('user.re
 Route::post('/login', [LoginController::class, 'login'])->name('user.login');
 
 
-Route::prefix('/appActivities')->group(function () {
+Route::middleware('auth:api')->prefix('/appActivities')->group(function () {
     // Rutas de usuarios
     Route::prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])->name('user.details');
