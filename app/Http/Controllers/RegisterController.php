@@ -20,11 +20,9 @@ class RegisterController extends Controller
         $sucess['surname'] = $user->surname;
         $sucess['token'] = $user->createToken('MyApp')->accessToken;
 
-        $user->delete();
-
-        $response = $this->sendResponse($sucess, 'registered successfully');
-
-        return $response;
+        return response()->json([
+            'success' => true,
+        ], 200);
     }
 
 }
