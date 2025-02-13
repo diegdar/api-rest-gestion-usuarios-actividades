@@ -71,31 +71,30 @@ class ActivityController extends Controller
         return response()->json($activities);
     }
 
-    private function handleFileUpload(Request $request): array
+    public function importActivities(Request $request): JsonResponse
     {
         $request->validate([
-            'file' => 'required|file|mimes:json',
+            '*.name' => 'required|string',
+            '*.description' => 'nullable|string',
+            '*.max_capacity' => 'required|integer|min:1',
+            '*.start_date' => 'required|date_format:Y-m-d',
         ]);
 
-        $json = file_get_contents($request->file('file')->getRealPath());
+        $this->storeActivities($request->all());
 
-        return json_decode($json, true);
+        return response()->json(['message' => 'Activities imported successfully'], 201);
     }
 
-    private function storeActivities(array $activities): void
+    private function storeActivities(array $activities)
     {
         foreach ($activities as $activity) {
-            Activity::create($activity);
+            Activity::updateOrCreate([
+                'name' => $activity['name'],
+            ], [
+                'description' => $activity['description'],
+                'max_capacity' => $activity['max_capacity'],
+                'start_date' => $activity['start_date'],
+            ]);
         }
     }
-
-    public function importActivities(Request $request)
-    {
-        $activities = $this->handleFileUpload($request);
-
-        $this->storeActivities($activities);
-
-        return response()->json(['message' => 'Actividades importadas con éxito']);
-    }
-
 }
