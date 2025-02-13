@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Builders;
 
 use App\Models\Activity;
-use DateTime;
+use Faker\Factory;
 
 class ActivityBuilder
 {
@@ -16,10 +16,12 @@ class ActivityBuilder
 
     public function __construct()
     {
-        $this->name = "Activity name";
-        $this->description = "Activity description";
-        $this->maxCapacity = 10;
-        $this->startDate = "2022-01-01";
+        $faker = Factory::create();
+
+        $this->name = $faker->sentence(8);
+        $this->description = $faker->text(50);
+        $this->maxCapacity = $faker->numberBetween(5, 50);
+        $this->startDate = $faker->date('Y-m-d');
     }
 
     public function withName(string $name): ActivityBuilder
@@ -66,6 +68,6 @@ class ActivityBuilder
         ];
     }
 
-    
+
 
 }
