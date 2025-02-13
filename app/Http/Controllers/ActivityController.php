@@ -17,7 +17,16 @@ class ActivityController extends Controller
     public function store(ActivityFormRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        Activity::create($validated);
+        Activity::updateOrCreate(
+            // field to check if the record exists
+            ['name' => $validated['name']],
+            // fields to update or create if the record does not exist
+            [
+                'description' => $validated['description'],
+                'max_capacity' => $validated['max_capacity'],
+                'start_date' => $validated['start_date'],
+            ]
+        );
 
         return response()->json(['message' => 'The activity has been created successfully']);
     }
