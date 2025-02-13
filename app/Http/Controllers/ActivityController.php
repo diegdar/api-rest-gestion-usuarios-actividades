@@ -7,35 +7,32 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ActivityFormRequest;
 use App\Models\Activity;
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Services\ActivityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ActivityController extends Controller
 {
+    private ActivityService $activityService;
+
+    public function __construct(ActivityService $activityService)
+    {
+        $this->activityService = $activityService;
+    }
+
     public function store(ActivityFormRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        Activity::updateOrCreate(
-            // field to check if the record exists
-            ['name' => $validated['name']],
-            // fields to update or create if the record does not exist
-            [
-                'description' => $validated['description'],
-                'max_capacity' => $validated['max_capacity'],
-                'start_date' => $validated['start_date'],
-            ]
-        );
+        $this->activityService->createOrUpdateActivity($validated);
 
         return response()->json(['message' => 'The activity has been created successfully']);
     }
 
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        try {
-            $activity = Activity::findOrFail($id);
-            return response()->json([
+        $activity = $this->activityService->getActivityById((int) $id);
+
+        return response()->json([
             'activityData' => [
                 'id' => $activity->id,
                 'name' => $activity->name,
@@ -43,58 +40,65 @@ class ActivityController extends Controller
                 'max_capacity' => $activity->max_capacity,
                 'start_date' => $activity->start_date,
             ],
-            ]);
-        } catch (ModelNotFoundException $e) {
-            throw new NotFoundHttpException('Activity not found');
-        }
+        ]);
     }
 
-    public function joinActivity(User $user, Activity $activity)
+    public function joinActivity(User $user, Activity $activity): JsonResponse
     {
-        if ($activity->users()->where('user_id', $user->id)->exists()) {
+        if (!$this->activityService->joinUserToActivity($user->id, $activity)) {
             return response()->json([
                 'message' => 'User is already joined to this activity',
             ], 409);
         }
-
-        $activity->users()->attach($user->id);
 
         return response()->json([
             'message' => 'User joined the activity successfully',
         ]);
     }
 
-    public function exportActivities()
+    public function exportActivities(): JsonResponse
     {
-        $activities = Activity::all();
-
-        return response()->json($activities);
+        return response()->json($this->activityService->getAllActivities());
     }
 
     public function importActivities(Request $request): JsonResponse
     {
-        $request->validate([
-            '*.name' => 'required|string',
-            '*.description' => 'nullable|string',
-            '*.max_capacity' => 'required|integer|min:1',
-            '*.start_date' => 'required|date_format:Y-m-d',
-        ]);
+        // Validar el formato JSON
+        if (!$this->isValidJson($request)) {
+            return $this->invalidJsonResponse();
+        }
 
-        $this->storeActivities($request->all());
+        // Almacenar actividades y obtener errores si existen
+        $errors = $this->activityService->storeActivities($request->all());
+
+        if ($errors) {
+            return $this->validationErrorResponse($errors);
+        }
 
         return response()->json(['message' => 'Activities imported successfully'], 201);
     }
 
-    private function storeActivities(array $activities)
+    // Método para verificar si el JSON es válido
+    private function isValidJson(Request $request): bool
     {
-        foreach ($activities as $activity) {
-            Activity::updateOrCreate([
-                'name' => $activity['name'],
-            ], [
-                'description' => $activity['description'],
-                'max_capacity' => $activity['max_capacity'],
-                'start_date' => $activity['start_date'],
-            ]);
-        }
+        json_decode($request->getContent());
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    private function invalidJsonResponse(): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Invalid JSON format.',
+            'errors' => ['format' => ['The JSON provided is malformed.']],
+        ], 400);
+    }
+
+    // Respuesta para el caso de error de validación
+    private function validationErrorResponse(array $errors): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Some activities failed validation',
+            'errors' => $errors,
+        ], 422);
     }
 }
