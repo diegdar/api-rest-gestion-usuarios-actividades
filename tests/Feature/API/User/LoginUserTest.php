@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Builders\UserBuilder;
 use App\Http\Controllers\LoginController;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -23,20 +24,9 @@ class LoginUserTest extends TestCase
         $this->assertInstanceOf(LoginController::class, new LoginController());
     }
 
-    private function createUserData(): array
-    {
-        return [
-            'name' => 'test_name',
-            'surname' => 'test_surname',
-            'age' => 30,
-            'email' => 'test@example.com',
-            'password' => 'PassworTest$983',
-        ];
-    }
-
     public function testCanLoginSuccessfully(): void
     {
-        $userData = $this->createUserData();
+        $userData = (new UserBuilder())->toArray();
         $user = User::create($userData);
 
         $response = $this->postJson(route('user.login'), [
@@ -55,7 +45,7 @@ class LoginUserTest extends TestCase
 
     public function testCanShow_401WhithIncorrectPassword()
     {
-        $userData = $this->createUserData();
+        $userData = (new UserBuilder())->toArray();
         User::create($userData);
 
         $userData['password'] = 'wrongPassword';
@@ -67,7 +57,7 @@ class LoginUserTest extends TestCase
 
     public function testCanShow_401WhithIncorrectEmail(): void
     {
-        $userData = $this->createUserData();
+        $userData = (new UserBuilder())->toArray();
         User::create($userData);
 
         $userData['email'] = 'wrongEmail@test.com';
