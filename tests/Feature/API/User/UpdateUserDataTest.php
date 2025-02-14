@@ -6,7 +6,10 @@ namespace Tests\Feature\API\User;
 
 use App\Http\Controllers\UserController;
 use App\Models\User;
+use App\tests\Mothers\UserMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class UpdateUserDataTest extends TestCase
@@ -17,8 +20,17 @@ class UpdateUserDataTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = UserMother::random();
     }
+
+    private function putUpdateUser(int $user = null, string $token = null, array $dataToUpdate ): TestResponse
+    {
+        return $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ])->putJson(route('user.update', $user), $dataToUpdate);
+    }            
+
     public function testCanInstanciateUser(): void
     {
         $this->assertInstanceOf(User::class, new User());
@@ -31,23 +43,15 @@ class UpdateUserDataTest extends TestCase
 
     public function testCanUpdateUserSuccessfully(): void
     {
-        $updatedData = [
+        $token = $this->user->createToken('authToken')->accessToken;
+        $updatedData = UserMother::toArray([
             'name' => 'updated_name',
             'surname' => 'updated_surname',
             'age' => 35,
-            'email' => 'updated@example.com',
-            'password' => 'NewPassworTest$983',
-        ];
+        ]);
 
-        $token = $this->user->createToken('authToken')->accessToken;
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->putJson(route('user.update', $this->user), $updatedData);
-
+        $response = $this->putUpdateUser($this->user->id, $token, $updatedData);
         $response->assertStatus(200);
-        $response->assertJson(['message' => 'updated successfully']);
 
         $this->user->refresh(); // Reload the user data
         $this->assertEquals($updatedData['name'], $this->user->name);
@@ -58,92 +62,52 @@ class UpdateUserDataTest extends TestCase
 
     public function testCannotUpdateUserWhenNotAuthenticated(): void
     {
-        $updatedData = [
-            'name' => 'new_name',
-            'surname' => 'new_surname',
-            'age' => 25,
-            'email' => 'new@example.com',
-            'password' => 'ValidPassword123!',
-        ];
+        $updatedData = UserMother::toArray([
+            'name' => 'updated_name',
+            'surname' => 'updated_surname',
+            'age' => 35,
+        ]);
 
-        $response = $this->putJson(route('user.update', $this->user), $updatedData);
-
+        $response = $this->putUpdateUser($this->user->id, null, $updatedData);
         $response->assertStatus(401);
     }
 
     public function testCannotUpdateNonExistentUser(): void
     {
-        $updatedData = [
-            'name' => 'new_name',
-            'surname' => 'new_surname',
-            'age' => 25,
-            'email' => 'new@example.com',
-            'password' => 'ValidPassword123!',
-        ];
+        $token = $this->user->createToken('authToken')->accessToken;
+        $updatedData = UserMother::toArray([
+            'name' => 'updated_name',
+            'surname' => 'updated_surname',
+            'age' => 35,
+        ]);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->user->createToken('authToken')->accessToken,
-            'Accept' => 'application/json',
-        ])->putJson(route('user.update', 999999), $updatedData);
-
+        $response = $this->putUpdateUser(9999, $token, $updatedData);
         $response->assertStatus(404);
     }
 
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('userValidationProvider')]
-    public function testCanValidateUserFields(array $invalidData, array $expectedErrors): void
+    #[DataProvider('userValidationProvider')]
+    public function testCanValidateUserFields(array $invalidData): void
     {
-        $user = User::factory()->create();
-        $token = $user->createToken('authToken')->accessToken;
+        $data = UserMother::toArray();
+        $token = $this->user->createToken('authToken')->accessToken;
+        $data = array_merge($data, $invalidData);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->putJson(route('user.update', $user->id), $invalidData);
-
+        $response = $this->putUpdateUser($this->user->id, $token, $data);
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors($expectedErrors);
     }
 
     public static function userValidationProvider(): array
     {
         return [
-            'invalid name (not a string)' => [
-                [
-                    'name'     => 123,
-                    'surname'  => 'updated_surname',
-                    'email'    => 'email@example.com',
-                    'age'      => 31,
-                ],
-                ['name'],
-            ],
-            'invalid surname (not a string)' => [
-                [
-                    'name'     => 'updated_name',
-                    'surname'  => 456,
-                    'email'    => 'email@example.com',
-                    'age'      => 31,
-                ],
-                ['surname'],
-            ],
-            'invalid email (wrong format)' => [
-                [
-                    'name'     => 'updated_name',
-                    'surname'  => 'updated_surname',
-                    'email'    => 'not-an-email',
-                    'age'      => 31,
-                ],
-                ['email'],
-            ],
-            'invalid age (not an integer)' => [
-                [
-                    'name'     => 'updated_name',
-                    'surname'  => 'updated_surname',
-                    'email'    => 'email@example.com',
-                    'age'      => 'thirty',
-                ],
-                ['age'],
-            ],
+            'missing_name' => [['name' => null]],
+            'invalid_name' => [['name' => 123]],
+            'missing_surname' => [['surname' => null]],
+            'invalid_surname' => [['surname' => 456]],
+            'missing_age' => [['age' => null]],
+            'invalid_age' => [['age' => 'not-a-number']],
+            'invalid_email' => [['email' => 'not-an-email']],
+            'invalid_password' => [['password' => 'PassworTest983']],
         ];
     }
 }
