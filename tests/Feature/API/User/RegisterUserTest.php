@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
-use App\Builders\UserBuilder;
 use App\Http\Controllers\RegisterController;
 use App\Models\User;
+use App\tests\Mothers\UserMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -32,7 +32,7 @@ class RegisterUserTest extends TestCase
 
     public function testCanRegisterAnUser(): void
     {
-        $userData = (new UserBuilder())->toArray();
+        $userData = UserMother::toArray();
 
         $response = $this->postJson(route('user.register'), $userData);
 
@@ -47,9 +47,8 @@ class RegisterUserTest extends TestCase
     #[DataProvider('invalidUserDataProvider')]
     public function testCannotImportActivitiesWithInvalidData(array $invalidData): void
     {
-        $data = [(new UserBuilder())->toArray()];
-        $data[0] = array_merge($data[0], $invalidData);
-
+        $data = UserMother::toArray();
+        $data = array_merge($data, $invalidData);
         $response = $this->postJson(route('user.register'), $data);
 
         $response->assertStatus(422);
@@ -109,8 +108,8 @@ class RegisterUserTest extends TestCase
     #[DataProvider('userValidationProvider')]
     public function testCanValidateUserFields(array $invalidData, array $expectedErrors): void
     {
-        $data = (new UserBuilder())->toArray();
-        $data = array_merge($data, $invalidData);
+        $userData = UserMother::toArray();
+        $data = array_merge($userData, $invalidData);
 
         $response = $this->postJson(route('user.register'), $data);
 

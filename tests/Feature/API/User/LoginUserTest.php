@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
-use App\Builders\UserBuilder;
 use App\Http\Controllers\LoginController;
 use App\Models\User;
+use App\tests\Mothers\UserMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -26,7 +26,7 @@ class LoginUserTest extends TestCase
 
     public function testCanLoginSuccessfully(): void
     {
-        $userData = (new UserBuilder())->toArray();
+        $userData = UserMother::toArray();
         $user = User::create($userData);
 
         $response = $this->postJson(route('user.login'), [
@@ -45,7 +45,7 @@ class LoginUserTest extends TestCase
 
     public function testCanShow_401WhithIncorrectPassword()
     {
-        $userData = (new UserBuilder())->toArray();
+        $userData = UserMother::toArray();
         User::create($userData);
 
         $userData['password'] = 'wrongPassword';
@@ -57,7 +57,7 @@ class LoginUserTest extends TestCase
 
     public function testCanShow_401WhithIncorrectEmail(): void
     {
-        $userData = (new UserBuilder())->toArray();
+        $userData = UserMother::toArray();
         User::create($userData);
 
         $userData['email'] = 'wrongEmail@test.com';
