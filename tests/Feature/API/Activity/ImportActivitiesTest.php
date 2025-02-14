@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
-use App\Builders\ActivityBuilder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use App\Models\User;
+use App\tests\Mothers\ActivityMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -24,8 +24,8 @@ class ImportActivitiesTest extends TestCase
 
     public function testCanImportActivitiesSuccessfully()
     {
-        $activity1 = (new ActivityBuilder())->toArray();
-        $activity2 = (new ActivityBuilder())->toArray();
+        $activity1 = ActivityMother::toArray();
+        $activity2 = ActivityMother::toArray();
 
         $data = [$activity1, $activity2];
 
@@ -39,8 +39,8 @@ class ImportActivitiesTest extends TestCase
     public function testCannotImportActivitiesWhenNotAuthenticated(): void
     {
         $data = [
-            (new ActivityBuilder())->toArray(),
-            (new ActivityBuilder())->toArray()
+            ActivityMother::toArray(),
+            ActivityMother::toArray(),
         ];
 
         $response = $this->postJson(route('activities.import'), $data);
@@ -61,7 +61,7 @@ class ImportActivitiesTest extends TestCase
     #[DataProvider('invalidActivityDataProvider')]
     public function testCannotImportActivitiesWithInvalidData(array $invalidData): void
     {
-        $data = [(new ActivityBuilder())->toArray()];
+        $data = [ActivityMother::toArray()];
         $data[0] = array_merge($data[0], $invalidData);
 
         $response = $this->postImportActivities($data);
