@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Feature\API\User;
 
 use App\Builders\UserBuilder;
 use App\Http\Controllers\LoginController;
