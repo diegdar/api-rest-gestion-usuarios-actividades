@@ -1,12 +1,12 @@
 # API para la Gestión de Usuarios y Actividades 🎉
 
 ## Enunciado 📜
+Este proyecto consiste en una API REST diseñada para gestionar usuarios y actividades, permitiendo a las aplicaciones cliente consumir sus servicios e interactuar eficientemente con el sistema. El servicio ofrece funcionalidades como el registro de usuarios, la gestión de actividades, la inscripción de usuarios en una o varias actividades, y la importación y exportación de estas en formato JSON. Para garantizar la seguridad y un acceso adecuado, la API implementa un mecanismo de autenticación basado en tokens utilizando Laravel Passport.
 
-Este proyecto consiste en desarrollar una API para una aplicación web que gestiona usuarios y actividades. El servicio permite el registro de usuarios, la gestión de datos de las actividades y la importación/exportación de estas actividades en formato JSON.
 
 ## Requisitos Técnicos ⚙️
 
-### 1. Gestión de Usuarios 👤
+### 1. Gestión de Usuarios 👨‍👩‍👦‍👦
 - **Registro de nuevos usuarios**: Permite crear un nuevo usuario.
 - **Actualización de datos del usuario**: Permite modificar la información de un usuario existente.
 - **Eliminación de usuarios**: Permite eliminar un usuario del sistema.
@@ -15,7 +15,7 @@ Este proyecto consiste en desarrollar una API para una aplicación web que gesti
 ### 2. Gestión de Actividades 📅
 - **Creación de una nueva actividad**: Permite añadir una nueva actividad al sistema.
 - **Consulta de actividades**: Permite obtener una lista de todas las actividades.
-- **Apuntarse a una actividad**: Permite a un usuario registrarse en una actividad.
+- **Apuntarse a una actividad**: Permite a un usuario apuntarse a una actividad.
 
 ### 3. Exportación de Actividades 📤
 - **Exportar actividades en formato JSON**: Permite exportar la lista de actividades en un archivo JSON.
@@ -24,11 +24,13 @@ Este proyecto consiste en desarrollar una API para una aplicación web que gesti
 - **Importar actividades desde un archivo JSON**: Permite cargar actividades desde un archivo JSON.
 
 ### 5. Configuración de la Base de Datos 🗄️
-- Se ha establecido una conexión con una base de datos MySQL para almacenar los datos de usuarios y actividades.
+- Se ha establecido una conexión con una base de datos MySQL para almacenar los datos de usuarios, actividades y el registro de estos a una o varias actividades.
 
 ### 6. Autenticación de Usuarios 🔑
 - El proyecto utiliza **autenticación de usuarios con tokens** mediante **Passport**, asegurando que las operaciones sobre la API sean seguras y que solo los usuarios autenticados puedan acceder a las funciones protegidas.
 
+### 7. Test 🧪🔬
+- Se empleó la metodología **TDD**, creando pruebas automatizadas antes del desarrollo del código funcional. Este enfoque asegura que cada funcionalidad esté respaldada por una prueba que verifica su correcto funcionamiento, promoviendo un diseño más limpio y reduciendo la probabilidad de errores. Además, se utilizó el patrón **Object Mother** para mejorar la reutilización del código y facilitar el mantenimiento. 
 ## Endpoints de la API 🔗
 
 ### 1. Usuarios
@@ -40,7 +42,7 @@ Este proyecto consiste en desarrollar una API para una aplicación web que gesti
 ### 2. Actividades
 - `POST /appActivities/activity`: Creación de una nueva actividad.
 - `GET /appActivities/activities/{activity}`: Consulta de una actividad.
-- `POST /appActivities/users/{user}/activities/{activity}`: Apuntarse a una actividad.
+- `POST /appActivities/users/{user}/activities/{activity}`: un usuario se apunta a una actividad.
 
 ### 3. Importación/Exportación
 - `POST /import/activities`: Importar actividades desde un archivo JSON.
