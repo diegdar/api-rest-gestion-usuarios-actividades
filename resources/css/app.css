@@ -6,7 +6,7 @@
         --font-2nd-color: #282828;
         --font-3rd-color: #fec544;
         --bg-general-color: rgb(8, 13, 24);
-        --semi-transparent-white: rgba(245, 241, 241, 0.5);
+        --semi-transparent-yellow: rgba(254, 197, 68, 0.5);
     /*Margins  */
         /* PC */
         --margin-x_y-body-pc: 3rem 0;
@@ -245,7 +245,7 @@ body{
             color: var(--font-1st-color);
             font-weight: bold ;
             &:hover{
-                color: var(--semi-transparent-white)
+                color: var(--semi-transparent-yellow)
             }
 
             @media (max-width: 425px) {
