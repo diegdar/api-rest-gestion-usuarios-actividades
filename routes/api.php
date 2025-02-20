@@ -26,7 +26,7 @@ use App\Http\Controllers\{
 */
 
 // Rutas de registro y login
-Route::post('/register', [RegisterController::class, 'register'])->name('user.register');
+Route::post('/register', [RegisterController::class, 'register'])->name('user.create');
 Route::post('/login', [LoginController::class, 'login'])->name('user.login');
 
 
