@@ -16,10 +16,13 @@ class UserActivitiesSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::factory()->create();
-        $user->name = "Joe";
-        $user->surname = "Doe";
-        $user->save();
+        $user = User::create([
+            "name" => "Joe",
+            "surname" => "Doe",
+            "age" => 25,
+            "email"=> "joedoe@gmail.com",
+            "password"=> bcrypt("1234%pasword"),
+        ])->assignRole('User');
         $activity = Activity::where('name', 'cycling')->first();
         $user->activities()->attach($activity);
 
