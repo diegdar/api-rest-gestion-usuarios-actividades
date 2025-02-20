@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",()=>{const e=document.querySelector(".navbar-toggler"),t=e.querySelector(".toggler-icon");e.addEventListener("click",()=>{const n=e.getAttribute("aria-expanded")==="true";t.innerHTML=n?'<i class="fa-solid fa-xmark"></i>':'<i class="fa-solid fa-bars"></i>'})});

@@ -1,0 +1,35 @@
+{
+  "_index-DW_MHI2K.js": {
+    "file": "assets/index-DW_MHI2K.js",
+    "name": "index"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CS_GCmqr.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-1JlqZQyf.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_index-DW_MHI2K.js"
+    ]
+  },
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap-1JlqZQyf.js",
+    "name": "bootstrap",
+    "src": "resources/js/bootstrap.js",
+    "isEntry": true,
+    "imports": [
+      "_index-DW_MHI2K.js"
+    ]
+  },
+  "resources/js/navbar.js": {
+    "file": "assets/navbar-Cbeuhv0h.js",
+    "name": "navbar",
+    "src": "resources/js/navbar.js",
+    "isEntry": true
+  }
+}
