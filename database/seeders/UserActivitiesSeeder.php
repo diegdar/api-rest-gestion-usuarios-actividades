@@ -16,9 +16,10 @@ class UserActivitiesSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::where('name', 'Joe')
-                ->orWhere('surname', 'Doe')
-                ->first();
+        $user = User::factory()->create();
+        $user->name = "Joe";
+        $user->surname = "Doe";
+        $user->save();
         $activity = Activity::where('name', 'cycling')->first();
         $user->activities()->attach($activity);
 
