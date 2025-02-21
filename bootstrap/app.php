@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\AdminMiddlewear;
+use App\Http\Middleware\UserOwnershipMiddlewear;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -19,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'User.Ownership' => UserOwnershipMiddlewear::class,
+            'admin.permissions' => AdminMiddlewear::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->reportable(function (NotFoundHttpException $e) {

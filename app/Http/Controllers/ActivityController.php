@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ActivityFormRequest;
+use App\Http\Requests\CreateActivityFormRequest;
+use App\Http\Requests\UpdateActivityFormRequest;
 use App\Models\Activity;
 use App\Models\User;
 use App\Services\ActivityService;
@@ -20,12 +21,27 @@ class ActivityController extends Controller
         $this->activityService = $activityService;
     }
 
-    public function store(ActivityFormRequest $request): JsonResponse
+    public function store(CreateActivityFormRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $this->activityService->createOrUpdateActivity($validated);
+        $this->activityService->create($validated);
 
-        return response()->json(['message' => 'The activity has been created successfully']);
+        return response()->json(['message' => 'La actividad se ha creado correctamente']);
+    }
+
+    public function update(UpdateActivityFormRequest $request, Activity $activity): JsonResponse
+    {
+        $validated = $request->validated();
+        $this->activityService->update($validated, $activity);
+
+        return response()->json(['message' => 'La actividad se ha actualizado correctamente']);
+    }
+
+    public function destroy(Activity $activity): JsonResponse
+    {
+        $this->activityService->destroy($activity);
+
+        return response()->json(['message' => 'La actividad se ha eliminado correctamente']);
     }
 
     public function show($id): JsonResponse
@@ -47,12 +63,12 @@ class ActivityController extends Controller
     {
         if (!$this->activityService->joinUserToActivity($user->id, $activity)) {
             return response()->json([
-                'message' => 'User is already joined to this activity',
+                'message' => 'El usuario ya está unido a esta actividad',
             ], 409);
         }
 
         return response()->json([
-            'message' => 'User joined the activity successfully',
+            'message' => 'El usuario se unió a la actividad correctamente',
         ]);
     }
 
@@ -63,22 +79,22 @@ class ActivityController extends Controller
 
     public function importActivities(Request $request): JsonResponse
     {
-        // Validar el formato JSON
+        // Validate JSON format
         if (!$this->isValidJson($request)) {
             return $this->invalidJsonResponse();
         }
 
-        // Almacenar actividades y obtener errores si existen
+        // Store activities and get errors if any
         $errors = $this->activityService->storeActivities($request->all());
 
         if ($errors) {
             return $this->validationErrorResponse($errors);
         }
 
-        return response()->json(['message' => 'Activities imported successfully'], 201);
+        return response()->json(['message' => 'Actividades importadas correctamente'], 201);
     }
 
-    // Método para verificar si el JSON es válido
+    // Method to check if JSON is valid
     private function isValidJson(Request $request): bool
     {
         json_decode($request->getContent());
@@ -88,16 +104,16 @@ class ActivityController extends Controller
     private function invalidJsonResponse(): JsonResponse
     {
         return response()->json([
-            'message' => 'Invalid JSON format.',
-            'errors' => ['format' => ['The JSON provided is malformed.']],
+            'message' => 'Formato JSON inválido.',
+            'errors' => ['format' => ['El JSON proporcionado está mal formado.']],
         ], 400);
     }
 
-    // Respuesta para el caso de error de validación
+    // Response for validation error case
     private function validationErrorResponse(array $errors): JsonResponse
     {
         return response()->json([
-            'message' => 'Some activities failed validation',
+            'message' => 'Algunas actividades fallaron la validación',
             'errors' => $errors,
         ], 422);
     }

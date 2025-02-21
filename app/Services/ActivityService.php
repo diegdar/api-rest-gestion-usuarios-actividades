@@ -5,21 +5,24 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Activity;
-use App\Http\Requests\ActivityFormRequest;
+use App\Http\Requests\CreateActivityFormRequest;
 use Illuminate\Validation\ValidationException;
 
 class ActivityService
 {
-    public function createOrUpdateActivity(array $data): void
+    public function create(array $data): void
     {
-        Activity::updateOrCreate(
-            ['name' => $data['name']],
-            [
-                'description' => $data['description'],
-                'max_capacity' => $data['max_capacity'],
-                'start_date' => $data['start_date'],
-            ]
-        );
+        Activity::create($data);
+    }
+
+    public function update(array $data, Activity $activity): void
+    {
+        $activity->update($data);
+    }
+
+    public function destroy(Activity $activity): void
+    {
+        $activity->delete();
     }
 
     public function getActivityById(int $id): Activity
@@ -47,13 +50,13 @@ class ActivityService
         $errors = [];
 
         foreach ($activities as $index => $activity) {
-            $request = new ActivityFormRequest();
+            $request = new CreateActivityFormRequest();
             $request->merge($activity); // Pasar datos al FormRequest
 
             try {
                 // Obtener los datos validados
                 $validated = $request->validate($request->rules());
-                $this->createOrUpdateActivity($validated);
+                $this->create($validated);
             } catch (ValidationException $e) {
                 $errors[$activity['name']] = $e->errors();
             }

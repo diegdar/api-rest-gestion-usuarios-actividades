@@ -34,7 +34,7 @@ class RegisterUserTest extends TestCase
     {
         $userData = UserMother::toArray();
 
-        $response = $this->postJson(route('user.register'), $userData);
+        $response = $this->postJson(route('user.create'), $userData);
 
         $response->assertStatus(200);
 
@@ -49,7 +49,7 @@ class RegisterUserTest extends TestCase
     {
         $data = UserMother::toArray();
         $data = array_merge($data, $invalidData);
-        $response = $this->postJson(route('user.register'), $data);
+        $response = $this->postJson(route('user.create'), $data);
 
         $response->assertStatus(422);
     }
@@ -78,7 +78,7 @@ class RegisterUserTest extends TestCase
     #[DataProvider('missingFieldsProvider')]
     public function testCanRequireFieldsWhenTheyAreMissing(array $invalidData, array $expectedErrors): void
     {
-        $response = $this->postJson(route('user.register'), $invalidData);
+        $response = $this->postJson(route('user.create'), $invalidData);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors($expectedErrors);
@@ -111,7 +111,7 @@ class RegisterUserTest extends TestCase
         $userData = UserMother::toArray();
         $data = array_merge($userData, $invalidData);
 
-        $response = $this->postJson(route('user.register'), $data);
+        $response = $this->postJson(route('user.create'), $data);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors($expectedErrors);
