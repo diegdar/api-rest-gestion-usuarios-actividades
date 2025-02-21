@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\AdminMiddlewear;
 use App\Http\Middleware\UserOwnershipMiddlewear;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -21,7 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'User.Ownership' => UserOwnershipMiddlewear::class
+            'User.Ownership' => UserOwnershipMiddlewear::class,
+            'admin.permissions' => AdminMiddlewear::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
