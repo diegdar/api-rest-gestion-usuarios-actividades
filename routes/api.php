@@ -41,8 +41,10 @@ Route::middleware('auth:api')->prefix('/appActivities')->group(function () {
     });
 
     // activities
-    Route::post('/activity', [ActivityController::class, 'store'])->name('activity.create');
     Route::get('/activity/{activity}', [ActivityController::class, 'show'])->name('activity.details');
+    Route::post('/activity', [ActivityController::class, 'store'])->name('activity.create');
+    Route::put('/activity/{activity}', [ActivityController::class, 'update'])->name('activity.update');
+    Route::delete('/activity/{activity}', [ActivityController::class, 'destroy'])->name('activity.delete');
 
     // import and export activities
     Route::get('/export/activities', [ActivityController::class, 'exportActivities'])->name('activities.export');

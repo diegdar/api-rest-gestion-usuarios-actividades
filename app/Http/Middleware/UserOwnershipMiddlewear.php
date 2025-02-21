@@ -20,7 +20,8 @@ class UserOwnershipMiddlewear
 
         if ($autheticatedUser->id == $userIdFromUrl->id
             || $autheticatedUser->hasRole('Admin')
-            ) {
+            ) 
+        {
             return $next($request);
         }
 

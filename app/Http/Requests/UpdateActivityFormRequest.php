@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule; 
 
-class ActivityFormRequest extends FormRequest
+class UpdateActivityFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,23 +27,27 @@ class ActivityFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('activities', 'name')->ignore($this->activity), 
+            ],
             'description' => 'required|string',
             'max_capacity' => 'required|integer|gt:0',
             'start_date' => 'required|date',
         ];
     }
 
-    /**
-         * Handle a failed validation attempt.
-         *
-         * @param  Validator  $validator
-         * @return void
-         *
-         * @throws HttpResponseException
-         */    protected function failedValidation(Validator $validator)
-    {
+/**
+     * Handle a failed validation attempt.
+     *
+     * @param  Validator  $validator
+     * @return void
+     *
+     * @throws HttpResponseException
+     */    protected function failedValidation(Validator $validator)
+        {
         throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
-    }
-
+    }    
 }
