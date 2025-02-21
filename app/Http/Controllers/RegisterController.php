@@ -15,7 +15,7 @@ class RegisterController extends Controller
         $input = $request->validated();
 
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
+        $user = User::create($input)->assignRole('User');
         $sucess['name'] = $user->name;
         $sucess['surname'] = $user->surname;
         $sucess['token'] = $user->createToken('MyApp')->accessToken;

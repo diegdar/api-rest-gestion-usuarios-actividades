@@ -18,23 +18,5 @@ class RoleSeeder extends Seeder
     {
         $adminRole = Role::create(["name"=> "Admin"]);
         $userRole = Role::create(["name"=> "User"]);
-
-        // Roles for users
-        Permission::create(["name"=> "user.create"])->assignRole($userRole);
-        Permission::create(["name"=> "user.login"])->assignRole($userRole);
-        Permission::create(["name"=> "user.activity.join"])->assignRole($userRole);
-        
-        // Roles for users and admins
-        Permission::create(["name"=> "user.details.get"])->syncRoles([$adminRole, $userRole]);
-        Permission::create(["name"=> "user.update"])->syncRoles([$adminRole, $userRole]);
-        Permission::create(["name"=> "user.delete"])->syncRoles([$adminRole, $userRole]);
-
-        // Roles for admins
-        Permission::create(["name"=> "activity.create"])->assignRole($adminRole);
-        Permission::create(["name"=> "activity.details.get"])->assignRole($adminRole);
-        Permission::create(["name"=> "activities.export"])->assignRole($adminRole);
-        Permission::create(["name"=> "activities.import"])->assignRole($adminRole);
-
-
     }
 }
