@@ -16,13 +16,7 @@ class UserActivitiesSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
-            "name" => "Joe",
-            "surname" => "Doe",
-            "age" => 25,
-            "email"=> "joedoe@gmail.com",
-            "password"=> bcrypt("1234%pasword"),
-        ])->assignRole('User');
+        $user = User::where("email","joedoe@gmail.com")->first();
         $activity = Activity::where('name', 'cycling')->first();
         $user->activities()->attach($activity);
 
