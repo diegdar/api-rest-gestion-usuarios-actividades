@@ -27,7 +27,6 @@ class Activity extends Model
     public function toArray()
     {
         return [
-            'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
             'max_capacity' => $this->max_capacity,
