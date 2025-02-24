@@ -4,34 +4,34 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
-use App\Http\Controllers\LoginController;
 use App\Models\User;
-use App\tests\Mothers\UserMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class LoginUserTest extends TestCase
 {
     use DatabaseTransactions;
+    protected User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->user = User::factory()->create()->assignRole('User');
     }
 
-    public function testCanInstanciateLoginController(): void
+    private function postLogin(array $data): TestResponse
     {
-        $this->assertInstanceOf(LoginController::class, new LoginController());
+        return $this->postJson(route('user.login'), $data);
     }
 
     public function testCanLoginSuccessfully(): void
     {
-        $userData = UserMother::toArray();
-        $user = User::create($userData);
+        $userData = $this->user->toArray();
 
-        $response = $this->postJson(route('user.login'), [
+        $response = $this->postLogin([
             'email' => $userData['email'],
-            'password' => $userData['password'],
+            'password' => 'password',
         ]);
 
         $response->assertStatus(200);
@@ -40,30 +40,28 @@ class LoginUserTest extends TestCase
                 'token',
             ]
         ]);
-        $response->assertJsonPath('data.id', $user->id);
+        $response->assertJsonPath('data.id', User::where('email', $userData['email'])->first()->id);
     }
 
     public function testCanShow_401WhithIncorrectPassword()
     {
-        $userData = UserMother::toArray();
-        User::create($userData);
+        $userData = $this->user->toArray();
 
-        $userData['password'] = 'wrongPassword';
-        $response = $this->postJson(route('user.login'), $userData);
+        $response = $this->postLogin([
+            'email' => $userData['email'],
+            'password' => 'wrongPassword',
+        ]);
 
         $response->assertStatus(401);
-
     }
 
     public function testCanShow_401WhithIncorrectEmail(): void
     {
-        $userData = UserMother::toArray();
-        User::create($userData);
-
-        $userData['email'] = 'wrongEmail@test.com';
-        $response = $this->postJson(route('user.login'), $userData);
+        $response = $this->postLogin([
+            'email' => 'wrongEmail@test.com',
+            'password' => 'password',
+        ]);
 
         $response->assertStatus(401);
     }
-
 }
