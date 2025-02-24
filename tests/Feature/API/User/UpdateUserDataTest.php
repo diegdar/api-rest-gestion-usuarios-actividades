@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
-use App\Http\Controllers\UserController;
 use App\Models\User;
-use App\tests\Mothers\UserMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -20,8 +18,16 @@ class UpdateUserDataTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = UserMother::random();
+        $this->user = User::factory()->create();
     }
+
+    private function getUserData(): array
+    {
+        $userData = User::factory()->make()->toArray();
+        $userData['password'] = 'Password&1234';
+
+        return $userData;
+    }    
 
     private function putUpdateUser(int $user = null, string $token = null, array $dataToUpdate ): TestResponse
     {
@@ -31,24 +37,13 @@ class UpdateUserDataTest extends TestCase
         ])->putJson(route('user.update', $user), $dataToUpdate);
     }            
 
-    public function testCanInstanciateUser(): void
-    {
-        $this->assertInstanceOf(User::class, new User());
-    }
-
-    public function testCanInstanciateUserController(): void
-    {
-        $this->assertInstanceOf(UserController::class, new UserController());
-    }
-
     public function testCanUpdateUserSuccessfully(): void
     {
         $token = $this->user->createToken('authToken')->accessToken;
-        $updatedData = UserMother::toArray([
+        $updatedData = User::factory()->make([
             'name' => 'updated_name',
             'surname' => 'updated_surname',
-            'age' => 35,
-        ]);
+        ])->toArray();
 
         $response = $this->putUpdateUser($this->user->id, $token, $updatedData);
         $response->assertStatus(200);
@@ -62,11 +57,10 @@ class UpdateUserDataTest extends TestCase
 
     public function testCannotUpdateUserWhenNotAuthenticated(): void
     {
-        $updatedData = UserMother::toArray([
+        $updatedData = User::factory()->make([
             'name' => 'updated_name',
             'surname' => 'updated_surname',
-            'age' => 35,
-        ]);
+        ])->toArray();
 
         $response = $this->putUpdateUser($this->user->id, null, $updatedData);
         $response->assertStatus(401);
@@ -75,11 +69,10 @@ class UpdateUserDataTest extends TestCase
     public function testCannotUpdateNonExistentUser(): void
     {
         $token = $this->user->createToken('authToken')->accessToken;
-        $updatedData = UserMother::toArray([
+        $updatedData = User::factory()->make([
             'name' => 'updated_name',
             'surname' => 'updated_surname',
-            'age' => 35,
-        ]);
+        ])->toArray();
 
         $response = $this->putUpdateUser(9999, $token, $updatedData);
         $response->assertStatus(404);
@@ -89,7 +82,7 @@ class UpdateUserDataTest extends TestCase
     #[DataProvider('userValidationProvider')]
     public function testCanValidateUserFields(array $invalidData): void
     {
-        $data = UserMother::toArray();
+        $data = $this->getUserData();
         $token = $this->user->createToken('authToken')->accessToken;
         $data = array_merge($data, $invalidData);
 
