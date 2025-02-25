@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
+use App\Models\Activity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use App\Models\User;
-use App\tests\Mothers\ActivityMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -14,58 +14,57 @@ use Tests\TestCase;
 class ImportActivitiesTest extends TestCase
 {
     use DatabaseTransactions;
+
     protected User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create()->assignRole('Admin');
     }
 
-    public function testCanImportActivitiesSuccessfully()
+    private function createActivitiesData(int $count = 2): array
     {
-        $activity1 = ActivityMother::toArray();
-        $activity2 = ActivityMother::toArray();
-
-        $data = [$activity1, $activity2];
-
-        $response = $this->postImportActivities($data);
-
-        $response->assertStatus(201);
-        $this->assertDatabaseHas('activities', $activity1);
-        $this->assertDatabaseHas('activities', $activity2);
-    }
-
-    public function testCannotImportActivitiesWhenNotAuthenticated(): void
-    {
-        $data = [
-            ActivityMother::toArray(),
-            ActivityMother::toArray(),
-        ];
-
-        $response = $this->postJson(route('activities.import'), $data);
-
-        $response->assertStatus(401);
+        $activities = [];
+        for ($i = 0; $i < $count; $i++) {
+            $activities[] = Activity::factory()->make()->toArray();
+        }
+        return $activities;
     }
 
     private function postImportActivities(array $data): TestResponse
     {
         $token = $this->user->createToken('authToken')->accessToken;
-
         return $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
             'Accept' => 'application/json',
         ])->postJson(route('activities.import'), $data);
     }
 
+    public function testCanImportActivitiesSuccessfully()
+    {
+        $activities = $this->createActivitiesData();
+        $response = $this->postImportActivities($activities);
+
+        $response->assertStatus(201);
+        foreach ($activities as $activity) {
+            $this->assertDatabaseHas('activities', $activity);
+        }
+    }
+
+    public function testCannotImportActivitiesWhenNotAuthenticated(): void
+    {
+        $activities = $this->createActivitiesData();
+        $response = $this->postJson(route('activities.import'), $activities);
+        $response->assertStatus(401);
+    }
+
     #[DataProvider('invalidActivityDataProvider')]
     public function testCannotImportActivitiesWithInvalidData(array $invalidData): void
     {
-        $data = [ActivityMother::toArray()];
-        $data[0] = array_merge($data[0], $invalidData);
-
-        $response = $this->postImportActivities($data);
-
+        $activities = $this->createActivitiesData();
+        $activities[0] = array_merge($activities[0], $invalidData);
+        $response = $this->postImportActivities($activities);
         $response->assertStatus(422);
     }
 

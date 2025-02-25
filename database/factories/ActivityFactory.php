@@ -19,7 +19,7 @@ class ActivityFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->randomElement(['yoga', 'meditation', 'running', 'swimming', 'cycling']),
+            'name' => fake()->unique()->sentence(1),
             'description' => fake()->sentence(10),
             'max_capacity' => fake()->numberBetween(15, 50),
             'start_date' => fake()->dateTimeBetween('-1 year', 'now'),

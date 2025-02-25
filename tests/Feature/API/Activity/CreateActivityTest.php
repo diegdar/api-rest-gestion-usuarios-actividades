@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
+use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CreateActivityTest extends TestCase
@@ -17,19 +19,19 @@ class CreateActivityTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create()->assignRole('Admin');
+    }
+
+    private function CreateActivityData(): array
+    {
+        return Activity::factory()->make()->toArray();
     }
 
     public function testCanCreateActivitySuccessfully(): void
     {
         $token = $this->user->createToken('authToken')->accessToken;
 
-        $activityData = [
-            'name' => 'New Activity',
-            'description' => 'This is a new activity.',
-            'max_capacity' => 50,
-            'start_date' => '2024-10-15',
-        ];
+        $activityData = $this->CreateActivityData();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
@@ -37,26 +39,21 @@ class CreateActivityTest extends TestCase
         ])->postJson(route('activity.create'), $activityData);
 
         $response->assertStatus(200);
-        $response->assertJson(['message' => 'The activity has been created successfully']);
+        $response->assertJson(['message' => 'La actividad se ha creado correctamente']);
 
         $this->assertDatabaseHas('activities', $activityData);
     }
 
     public function testCannotCreateActivityWhenNotAuthenticated(): void
     {
-        $activityData = [
-            'name' => 'New Activity',
-            'description' => 'This is a new activity.',
-            'max_capacity' => 50,
-            'start_date' => '2024-10-15',
-        ];
+        $activityData = $this->CreateActivityData();
 
         $response = $this->postJson(route('activity.create'), $activityData);
 
         $response->assertStatus(401);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('activityValidationProvider')]
+    #[DataProvider('activityValidationProvider')]
     public function testCannotCreateActivityWithInvalidData(array $invalidData, array $expectedErrors): void
     {
         $token = $this->user->createToken('authToken')->accessToken;

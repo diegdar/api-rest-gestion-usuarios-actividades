@@ -136,10 +136,7 @@
                             una
                             prueba que verifica su correcto funcionamiento, promoviendo un diseño
                             más limpio y reduciendo la
-                            probabilidad de errores. Además, se utilizó el patrón Object Mother para
-                            mejorar la
-                            reutilización
-                            del código y facilitar el mantenimiento.
+                            probabilidad de errores.
                         </li>
                     </ul>
                 </ol>

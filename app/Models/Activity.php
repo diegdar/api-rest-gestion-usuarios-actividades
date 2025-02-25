@@ -24,4 +24,14 @@ class Activity extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function toArray()
+    {
+        return [
+            'name' => $this->name,
+            'description' => $this->description,
+            'max_capacity' => $this->max_capacity,
+            'start_date' => $this->start_date->format('Y-m-d'),
+        ];
+    }    
+
 }

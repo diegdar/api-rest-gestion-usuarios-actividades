@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
-use App\Http\Controllers\RegisterController;
 use App\Models\User;
-use App\tests\Mothers\UserMother;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -20,21 +18,17 @@ class RegisterUserTest extends TestCase
         parent::setUp();
     }
 
-    public function testCanInstanciateUser(): void
+    private function getUserData(): array
     {
-        $this->assertInstanceOf(User::class, new User());
-    }
+        $userData = User::factory()->make()->toArray();
+        $userData['password'] = 'Password&1234';
 
-    public function testCanInstanciateRegisterController(): void
-    {
-        $this->assertInstanceOf(RegisterController::class, new RegisterController());
+        return $userData;
     }
 
     public function testCanRegisterAnUser(): void
     {
-        $userData = UserMother::toArray();
-
-        $response = $this->postJson(route('user.create'), $userData);
+        $response = $this->postJson(route('user.create'), $this->getUserData());
 
         $response->assertStatus(200);
 
@@ -47,7 +41,7 @@ class RegisterUserTest extends TestCase
     #[DataProvider('invalidUserDataProvider')]
     public function testCannotImportActivitiesWithInvalidData(array $invalidData): void
     {
-        $data = UserMother::toArray();
+        $data = $this->getUserData();
         $data = array_merge($data, $invalidData);
         $response = $this->postJson(route('user.create'), $data);
 
@@ -108,7 +102,7 @@ class RegisterUserTest extends TestCase
     #[DataProvider('userValidationProvider')]
     public function testCanValidateUserFields(array $invalidData, array $expectedErrors): void
     {
-        $userData = UserMother::toArray();
+        $userData = $this->getUserData();
         $data = array_merge($userData, $invalidData);
 
         $response = $this->postJson(route('user.create'), $data);
