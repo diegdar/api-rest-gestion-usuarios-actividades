@@ -89,6 +89,7 @@ class LoginUserTest extends TestCase
             'valid email, invalid password (no uppercase)' => [['email' => 'test@example.com', 'password' => 'password123!'], ['password']],
             'valid email, invalid password (no number)' => [['email' => 'test@example.com', 'password' => 'Password!'], ['password']],
             'valid email, invalid password (no special char)' => [['email' => 'test@example.com', 'password' => 'Password123'], ['password']],
+            'invalid password (too long)' => [['password' => str_repeat('a', 21)], ['password']],
             'valid email, invalid password (too short)' => [['email' => 'test@example.com', 'password' => 'Pass1!'], ['password']],
             'invalid email, valid password' => [['email' => 'invalid-email', 'password' => 'Password&123'], ['email']],
         ];

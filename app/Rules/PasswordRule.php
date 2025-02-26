@@ -21,6 +21,10 @@ class PasswordRule implements ValidationRule
             return;
         }
 
+        if (strlen($value) >= 21) {
+            $fail('La contraseña debe tener menos de 21 caracteres.');
+        }
+
         if (!preg_match('/[A-Z]/', $value)) {
             $fail('La contraseña debe contener al menos una letra mayúscula.');
         }

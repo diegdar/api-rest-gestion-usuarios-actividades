@@ -26,7 +26,7 @@ use App\Http\Controllers\{
 */
 
 // Login and register
-Route::post('/register', [RegisterController::class, 'register'])->name('user.create');
+Route::post('/register', [RegisterController::class, 'store'])->name('user.store');
 Route::post('/login', [LoginController::class, 'login'])->name('user.login');
 Route::middleware('auth:api')->prefix('/appActivities')->group(function () {
     // users' routes
