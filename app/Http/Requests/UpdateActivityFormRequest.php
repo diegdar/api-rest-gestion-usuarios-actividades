@@ -33,9 +33,9 @@ class UpdateActivityFormRequest extends FormRequest
                 'max:255',
                 Rule::unique('activities', 'name')->ignore($this->activity), 
             ],
-            'description' => 'required|string',
-            'max_capacity' => 'required|integer|gt:0',
-            'start_date' => 'required|date',
+            'description' => ['require', 'string'],
+            'max_capacity' => ['required', 'integer', 'gt:0'],
+            'start_date' => ['required', 'date'],
         ];
     }
 

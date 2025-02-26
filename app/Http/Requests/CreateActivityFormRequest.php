@@ -26,10 +26,10 @@ class CreateActivityFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:activities,name|string',
-            'description' => 'required|string',
-            'max_capacity' => 'required|integer|gt:0',
-            'start_date' => 'required|date',
+            'name' => ['required', 'unique:activities,name', 'string'],
+            'description' => ['required', 'string'],
+            'max_capacity' => ['required', 'integer', 'gt:0'],
+            'start_date' => ['required', 'date'],
         ];
     }
 
