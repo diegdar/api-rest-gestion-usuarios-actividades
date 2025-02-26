@@ -3,9 +3,7 @@
 ## Enunciado 📜
 Este proyecto consiste en una API REST diseñada para gestionar usuarios y actividades, permitiendo a las aplicaciones cliente consumir sus servicios e interactuar eficientemente con el sistema. El servicio ofrece funcionalidades como el registro de usuarios, la gestión de actividades, la inscripción de usuarios en una o varias actividades, y la importación y exportación de estas en formato JSON. Para garantizar la seguridad y un acceso adecuado, la API implementa un mecanismo de autenticación basado en tokens utilizando Laravel Passport.
 
-
 ## Requisitos Técnicos ⚙️
-
 ### 1. Gestión de Usuarios 👨‍👩‍👦‍👦
 - **Registro de nuevos usuarios**: Permite crear un nuevo usuario.
 - **Actualización de datos del usuario**: Permite modificar la información de un usuario existente.
@@ -30,9 +28,9 @@ Este proyecto consiste en una API REST diseñada para gestionar usuarios y activ
 - El proyecto utiliza **autenticación de usuarios con tokens** mediante **Passport**, asegurando que las operaciones sobre la API sean seguras y que solo los usuarios autenticados puedan acceder a las funciones protegidas.
 
 ### 7. Test 🧪🔬
-- Se empleó la metodología **TDD**, creando pruebas automatizadas antes del desarrollo del código funcional. Este enfoque asegura que cada funcionalidad esté respaldada por una prueba que verifica su correcto funcionamiento, promoviendo un diseño más limpio y reduciendo la probabilidad de errores. Además, se utilizó el patrón **Object Mother** para mejorar la reutilización del código y facilitar el mantenimiento. 
-## Endpoints de la API 🔗
+- Se empleó la metodología **TDD**, creando pruebas automatizadas antes del desarrollo del código funcional. Este enfoque asegura que cada funcionalidad esté respaldada por una prueba que verifica su correcto funcionamiento, promoviendo un diseño más limpio y reduciendo la probabilidad de errores. 
 
+## Endpoints de la API 🔗
 ### 1. Usuarios
 - `POST /appActivities/register`: Registro de un nuevo usuario.
 - `PUT /appActivities/users/{user}`: Actualización de los datos de un usuario.
@@ -49,7 +47,6 @@ Este proyecto consiste en una API REST diseñada para gestionar usuarios y activ
 - `GET /export/activities`: Exportar actividades en formato JSON.
 
 ## Formato del JSON 📄
-
 ```json
 [
     {
@@ -78,3 +75,9 @@ Este proyecto consiste en una API REST diseñada para gestionar usuarios y activ
         "max_capacity": 30
     }
 ]
+
+// TODO: 
+// -Creara los test faltantes para delete y update activitie
+// -crear un trait para juntar los metodos comunes que se utilizan en los test
+// -Factorizar controllers.
+// -Crear un services para el user
