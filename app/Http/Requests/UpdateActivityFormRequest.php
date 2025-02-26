@@ -28,14 +28,14 @@ class UpdateActivityFormRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
+                'sometimes',
                 'string',
                 'max:255',
                 Rule::unique('activities', 'name')->ignore($this->activity), 
             ],
-            'description' => ['require', 'string'],
-            'max_capacity' => ['required', 'integer', 'gt:0'],
-            'start_date' => ['required', 'date'],
+            'description' => ['sometimes', 'string', 'max:255'],
+            'max_capacity' => ['sometimes', 'integer', 'gt:0', 'lt:80'],
+            'start_date' => ['sometimes', 'date', 'after_or_equal:today'],
         ];
     }
 
