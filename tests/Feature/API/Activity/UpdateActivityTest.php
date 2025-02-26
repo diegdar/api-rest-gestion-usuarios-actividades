@@ -30,7 +30,7 @@ class UpdateActivityTest extends TestCase
         return Activity::factory()->create();
     }    
 
-    private function putUpdateActivity(int $activityId = null, string $token = null, array $dataToUpdate ): TestResponse
+    private function requestUpdateActivity(int $activityId = null, string $token = null, array $dataToUpdate ): TestResponse
     {
         return $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
@@ -50,7 +50,7 @@ class UpdateActivityTest extends TestCase
             'max_capacity' => 50,
         ];
 
-        $response = $this->putUpdateActivity($activity->id, $token, $dataToUpdate);
+        $response = $this->requestUpdateActivity($activity->id, $token, $dataToUpdate);
 
         $updatedData = array_merge($activityData, $dataToUpdate);
 
@@ -68,7 +68,7 @@ class UpdateActivityTest extends TestCase
             'max_capacity' => 50,
         ];  
 
-        $response = $this->putUpdateActivity(9999, $token, $dataToUpdate);        
+        $response = $this->requestUpdateActivity(9999, $token, $dataToUpdate);        
 
         $response->assertStatus(404);
     }
@@ -82,7 +82,7 @@ class UpdateActivityTest extends TestCase
             'max_capacity' => 50,
         ];  
 
-        $response = $this->putUpdateActivity($activity->id, null, $dataToUpdate); 
+        $response = $this->requestUpdateActivity($activity->id, null, $dataToUpdate); 
 
         $response->assertStatus(401);
     }
@@ -97,7 +97,7 @@ class UpdateActivityTest extends TestCase
             'max_capacity' => 50,
         ];
 
-        $response = $this->putUpdateActivity($activity->id, $token, $dataToUpdate);
+        $response = $this->requestUpdateActivity($activity->id, $token, $dataToUpdate);
 
         $response->assertStatus(403);
     }
@@ -108,7 +108,7 @@ class UpdateActivityTest extends TestCase
         $token = $this->createUserAndGetToken();
         $activity = $this->CreateActivity();
     
-        $response = $this->putUpdateActivity($activity->id, $token, $invalidDataToUpdate);
+        $response = $this->requestUpdateActivity($activity->id, $token, $invalidDataToUpdate);
     
         $response->assertStatus(422);
         $response->assertJsonValidationErrors($field);
