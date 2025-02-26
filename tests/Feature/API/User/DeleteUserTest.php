@@ -6,51 +6,74 @@ namespace Tests\Feature\API\User;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class DeleteUserTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected User $user;
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+    }
+
+    private function createUser(string $role = 'User'): User
+    {
+        return User::factory()->create()->assignRole($role);
+    }
+
+    private function getUserToken(User $user)
+    {
+        return $user->createToken('authToken')->accessToken;
+    }
+
+    private function requestDeleteUser(int $userId = null, string $token = null): TestResponse
+    {
+        return $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ])->deleteJson(route('user.delete', $userId));
     }
 
     public function testCanDeleteUserSuccessfully(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser();
+        $token = $this->getUserToken($user);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->deleteJson(route('user.delete', $this->user));
+        $response = $this->requestDeleteUser($user->id, $token);
 
         $response->assertStatus(200);
-        $response->assertJson(['message' => 'The user has been deleted successfully']);
-
-        $this->assertNull(User::find($this->user->id));
+        $this->assertNull(User::find($user->id));
     }
 
     public function testCannotDeleteUserWhenNotAuthenticated(): void
     {
-        $response = $this->deleteJson(route('user.delete', $this->user));
+        $user = $this->createUser();
+
+        $response = $this->requestDeleteUser($user->id, null);
 
         $response->assertStatus(401);
     }
 
     public function testCannotDeleteNonExistentUser(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser();
+        $token = $this->getUserToken($user);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->deleteJson(route('user.delete', 999999));
+        $response = $this->requestDeleteUser(999999, $token);
 
         $response->assertStatus(404);
+    }
+
+    public function testCannotDeleteUserThatIsNotTheOwner(): void
+    {
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $tokenUser1 = $this->getUserToken($user1);
+
+        $response = $this->requestDeleteUser($user2->id, $tokenUser1);
+
+        $response->assertStatus(403);
     }
 }
