@@ -22,7 +22,6 @@ class RegisterUserTest extends TestCase
     private function getUserData(): array
     {
         $userData = User::factory()->raw();
-        // $userData = User::factory()->make()->toArray();
         $userData['password'] = 'Password&1234';
 
         return $userData;
