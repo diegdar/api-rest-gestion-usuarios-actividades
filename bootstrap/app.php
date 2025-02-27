@@ -34,13 +34,6 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json(['error' => 'Recurso no encontrado'], 404);
         });
 
-        $exceptions->reportable(function (ValidationException $e) {
-            Log::error('Error de validación: ' . $e->getMessage());
-        });
-        $exceptions->renderable(function (ValidationException $e) {
-            return response()->json(['error' => 'Datos de entrada inválidos'], 422);
-        });
-
         $exceptions->reportable(function (AuthenticationException $e) {
             Log::error('Error de autenticación: ' . $e->getMessage());
         });

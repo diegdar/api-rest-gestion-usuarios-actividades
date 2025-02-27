@@ -4,62 +4,51 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
-use App\Http\Controllers\UserController;
-use App\Models\User;
+use App\Helpers\UserTestHelper;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class GetUserDetailsTest extends TestCase
 {
-    use DatabaseTransactions;
-    protected User $user;
+    use DatabaseTransactions, UserTestHelper;
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
     }
 
-    public function testCanInstanciateUserController(): void
+    private function requestGetUserDetails(int $userId = null, string $token = null): TestResponse
     {
-        $this->assertInstanceOf(UserController::class, new UserController());
+        return $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ])->getJson(route('user.details', $userId));
     }
 
     public function testCanGetAnUserDetails(): void
     {
-        $user = $this->user;
-        $token = $user->createToken('authToken')->accessToken;
+        $user = $this->createUser();
+        $token = $this->getUserToken($user);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-            ])->getJson(route('user.details', $user));
+        $response = $this->requestGetUserDetails($user->id, $token);
 
         $response->assertStatus(200);
-        $response->assertJson([
-            'userData' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'surname' => $user->surname,
-                'age' => $user->age,
-                'email' => $user->email,
-            ]
-        ]);
+        $response->assertJson(['userData' => $user->toArray()]);
     }
 
     public function testCanShow_401AndDeniedAccessWhenUserDoesNotExist(): void
     {
         $userNotExists = 99999999;
-        $response = $this->getJson(route('user.details', 99999999));
+        $response = $this->requestGetUserDetails($userNotExists);
 
         $response->assertStatus(401);
     }
 
     public function testCanShow_401AndDeniedAccessWhenUserIsNotAuthenticated(): void
     {
-        $user = $this->user;
+        $user = $this->createUser();
 
-        $response = $this->getJson(route('user.details', $user));
-
+        $response = $this->requestGetUserDetails($user->id);
         $response->assertStatus(401);
     }
 }

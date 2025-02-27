@@ -57,4 +57,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'surname' => $this->surname,
+            'age' => $this->age,
+            'email' => $this->email,
+        ];
+    }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
-use App\Models\Activity;
-use App\Models\User;
+use App\Helpers\ActivityTestHelper;
+use App\Helpers\UserTestHelper;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -13,22 +13,12 @@ use Tests\TestCase;
 
 class UpdateActivityTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, UserTestHelper, ActivityTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-    }
-
-    private function createUserAndGetToken(string $role = 'Admin'): string
-    {
-        return User::factory()->create()->assignRole($role)->createToken('authToken')->accessToken;
-    }
-
-    private function CreateActivity(): Activity
-    {
-        return Activity::factory()->create();
-    }    
+    } 
 
     private function requestUpdateActivity(int $activityId = null, string $token = null, array $dataToUpdate ): TestResponse
     {
@@ -40,8 +30,8 @@ class UpdateActivityTest extends TestCase
 
     public function testCanUpdateActivity(): void
     {
-        $token = $this->createUserAndGetToken();
-
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
         $activityData = $activity->toArray();
         $dataToUpdate = [
@@ -60,8 +50,8 @@ class UpdateActivityTest extends TestCase
 
     public function testCannotUpdateNonExistentActivity(): void
     {
-        $token = $this->createUserAndGetToken();
-
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
         $dataToUpdate = [
             'name' => 'Updated Activity',
             'description' => 'This is an updated activity.',
@@ -89,7 +79,8 @@ class UpdateActivityTest extends TestCase
 
     public function testCannotUpdateActivityWhenUserIsNotAnAdmin():void
     {
-        $token = $this->createUserAndGetToken('user');
+        $user = $this->createUser(role: 'user');
+        $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
         $dataToUpdate = [
             'name' => 'Updated Activity',
@@ -105,7 +96,8 @@ class UpdateActivityTest extends TestCase
     #[DataProvider('activityValidationProvider')]
     public function testCanValidateActivityFields(array $invalidDataToUpdate, array $field): void
     {
-        $token = $this->createUserAndGetToken();
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
     
         $response = $this->requestUpdateActivity($activity->id, $token, $invalidDataToUpdate);

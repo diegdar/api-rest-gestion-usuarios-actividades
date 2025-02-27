@@ -4,29 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
+use App\Helpers\ActivityTestHelper;
+use App\Helpers\UserTestHelper;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Models\User;
-use App\Models\Activity;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class DeleteActivityTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, UserTestHelper, ActivityTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-    }
-
-    private function createUserAndGetToken(string $role = 'Admin'): string
-    {
-        return User::factory()->create()->assignRole($role)->createToken('authToken')->accessToken;
-    }
-
-    private function CreateActivity(): Activity
-    {
-        return Activity::factory()->create();
     }
 
     private function requestDeleteActivity(int $activityId = null, string $token = null): TestResponse
@@ -37,9 +27,10 @@ class DeleteActivityTest extends TestCase
         ])->deleteJson(route('activity.delete', $activityId));
     }
     
-    public function testCanrequestDeleteActivitySuccessfully(): void
+    public function testItCanDeleteActivitySuccessfully(): void
     {
-        $token = $this->createUserAndGetToken();
+        $user = $this->createUser(role:'admin');
+        $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
         $response = $this->requestDeleteActivity($activity->id, $token);
@@ -48,9 +39,10 @@ class DeleteActivityTest extends TestCase
         $this->assertDatabaseMissing('activities', ['id' => $activity->id]);
     }
 
-    public function testCannotrequestDeleteActivityWhenUserIsNotAnAdmin():void
+    public function testItCannotDeleteActivityWhenUserIsNotAnAdmin():void
     {
-        $token = $this->createUserAndGetToken('User');
+        $user = $this->createUser();
+        $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
         $response = $this->requestDeleteActivity($activity->id, $token);
@@ -69,7 +61,8 @@ class DeleteActivityTest extends TestCase
 
     public function testCannotDeleteNonExistentActivity(): void
     {
-        $token = $this->createUserAndGetToken();
+        $user = $this->createUser();
+        $token = $this->getUserToken($user);
 
         $response = $this->requestDeleteActivity(9999, $token);
 
@@ -78,8 +71,8 @@ class DeleteActivityTest extends TestCase
 
     public function testCannotDeleteActivityWhenUserIsNotAdmin(): void
     {
-        $token = $this->createUserAndGetToken('User');
-
+        $user = $this->createUser(role: 'user');
+        $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
         $response = $this->requestDeleteActivity($activity->id, $token);

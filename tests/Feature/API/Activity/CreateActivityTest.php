@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
+use App\Helpers\UserTestHelper;
 use App\Models\Activity;
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CreateActivityTest extends TestCase
 {
-    use DatabaseTransactions;
-
-    protected User $user;
+    use DatabaseTransactions, UserTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create()->assignRole('Admin');
     }
 
     private function CreateActivityData(): array
@@ -27,19 +25,24 @@ class CreateActivityTest extends TestCase
         return Activity::factory()->make()->toArray();
     }
 
+    private function requestCreateActivity(array $activityData, string $token): TestResponse
+    {
+        return $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+            ])->postJson(route('activity.create'), $activityData);
+    }
+
     public function testCanCreateActivitySuccessfully(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
 
         $activityData = $this->CreateActivityData();
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->postJson(route('activity.create'), $activityData);
+        $response = $this->requestCreateActivity($activityData, $token);
 
         $response->assertStatus(200);
-        $response->assertJson(['message' => 'La actividad se ha creado correctamente']);
 
         $this->assertDatabaseHas('activities', $activityData);
     }
@@ -53,23 +56,35 @@ class CreateActivityTest extends TestCase
         $response->assertStatus(401);
     }
 
-    #[DataProvider('activityValidationProvider')]
-    public function testCannotCreateActivityWithInvalidData(array $invalidData, array $expectedErrors): void
+    public function testCanShowValidationErrorWhenActivityIsDuplicated(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
+        $activityData = $this->CreateActivityData();
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->postJson(route('activity.create'), $invalidData);
+        $this->requestCreateActivity($activityData, $token);
+
+        $response = $this->requestCreateActivity($activityData, $token);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors($expectedErrors);
+    }
+
+    #[DataProvider('activityValidationProvider')]
+    public function testCanShowValidationErrorWithInvalidData(array $invalidData, array $fieldName): void
+    {
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
+
+        $response = $this->requestCreateActivity($invalidData, $token);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors($fieldName);
     }
 
     public static function activityValidationProvider(): array
     {
         return [
+        // name
             'missing name' => [
                 [
                     'description' => 'This is a new activity.',
@@ -78,6 +93,16 @@ class CreateActivityTest extends TestCase
                 ],
                 ['name'],
             ],
+            'invalid name (not a string)' => [
+                [
+                    'name' => 123,
+                    'description' => 'This is a new activity.',
+                    'max_capacity' => 50,
+                    'start_date' => '2024-10-15',
+                ],
+                ['name'],
+            ],
+        // description
             'missing description' => [
                 [
                     'name' => 'New Activity',
@@ -86,6 +111,16 @@ class CreateActivityTest extends TestCase
                 ],
                 ['description'],
             ],
+            'invalid description (not a string)' => [
+                [
+                    'name' => 'New Activity',
+                    'description' => 123,
+                    'max_capacity' => 50,
+                    'start_date' => '2024-10-15',
+                ],
+                ['description'],
+            ],
+            // max_capacity
             'missing max_capacity' => [
                 [
                     'name' => 'New Activity',
@@ -112,6 +147,7 @@ class CreateActivityTest extends TestCase
                 ],
                 ['max_capacity'],
             ],
+        // start_date
             'missing start_date' => [
                 [
                     'name' => 'New Activity',

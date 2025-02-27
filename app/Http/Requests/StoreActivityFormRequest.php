@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CreateActivityFormRequest extends FormRequest
+class StoreActivityFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,9 +40,9 @@ class CreateActivityFormRequest extends FormRequest
      * @return void
      *
      * @throws HttpResponseException
-     */    protected function failedValidation(Validator $validator)
+     */   
+    protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
-    }
-
+    }    
 }

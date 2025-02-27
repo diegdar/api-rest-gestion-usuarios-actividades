@@ -4,54 +4,56 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
-use App\Models\Activity;
-use App\Models\User;
+use App\Helpers\ActivityTestHelper;
+use App\Helpers\UserTestHelper;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class GetActivityDetailsTest extends TestCase
 {
-    use DatabaseTransactions;
-
-    protected User $user;
-    protected Activity $activity;
+    use DatabaseTransactions, UserTestHelper, ActivityTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
-        $this->activity = Activity::factory()->create();
+    }
+
+    private function requestGetActivityDetails(int $activityId = null, string $token = null): TestResponse
+    {
+        return $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ])->getJson(route('activity.details', $activityId));
     }
 
     public function testCanGetActivityDetailsSuccessfully(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
+        $activity = $this->CreateActivity();
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->getJson(route('activity.details', $this->activity->id));
+        $response = $this->requestGetActivityDetails($activity->id, $token);
 
         $response->assertStatus(200);
-        $response->assertJson(['activityData' => $this->activity->toArray()]);
+        $response->assertJson(['activityData' => $activity->toArray()]);
     }
 
     public function testCannotGetActivityDetailsWhenNotAuthenticated(): void
     {
-        $response = $this->getJson(route('activity.details', $this->activity->id));
+        $activity = $this->CreateActivity();
+
+        $response = $this->getJson(route('activity.details', $activity->id));
 
         $response->assertStatus(401);
     }
 
     public function testCannotGetActivityDetailsOfNonExistentActivity(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->getJson(route('activity.details', 999999));
-
+        $response = $this->requestGetActivityDetails(9999, $token);
         $response->assertStatus(404);
 
     }

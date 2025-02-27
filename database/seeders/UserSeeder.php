@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             "age" => 23,
             "email"=> "janedoe@gmail.com",
             "password"=> bcrypt("1234%pasword"),
-        ])->assignRole('Admin');
+        ])->assignRole('admin');
 
         User::create([
             "name" => "Joe",
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             "age" => 25,
             "email"=> "joedoe@gmail.com",
             "password"=> bcrypt("1234%pasword"),
-        ])->assignRole('User');
+        ])->assignRole('user');
 
         User::create([
             "name" => "Ana",
@@ -37,8 +37,8 @@ class UserSeeder extends Seeder
             "age" => 25,
             "email"=> "anaruiz@gmail.com",
             "password"=> bcrypt("1234%pasword"),
-        ])->assignRole('User');
+        ])->assignRole('user');
 
-        User::factory(10)->create()->assignRole('User');
+        User::factory(10)->create()->assignRole('user');
     }
 }

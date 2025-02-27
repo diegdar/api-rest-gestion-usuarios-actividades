@@ -10,12 +10,12 @@ use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
-    public function register(RegisterFormRequest $request): JsonResponse
+    public function store(RegisterFormRequest $request): JsonResponse
     {
         $input = $request->validated();
 
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input)->assignRole('User');
+        $user = User::create($input)->assignRole('user');
         $sucess['name'] = $user->name;
         $sucess['surname'] = $user->surname;
         $sucess['token'] = $user->createToken('MyApp')->accessToken;

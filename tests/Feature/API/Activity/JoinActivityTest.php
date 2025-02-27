@@ -4,50 +4,55 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
-use App\Models\Activity;
-use App\Models\User;
+use App\Helpers\ActivityTestHelper;
+use App\Helpers\UserTestHelper;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class JoinActivityTest extends TestCase
 {
-    use DatabaseTransactions;
-
-    protected User $user;
-    protected Activity $activity;
+    use DatabaseTransactions, UserTestHelper, ActivityTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
-        $this->activity = Activity::factory()->create();
+    }
+
+    private function requestJoinActivity(int $userId = null, int $activityId = null, string $token = null): TestResponse
+    {
+        return $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ])->postJson(route('user.activity.join', [
+            'user' => $userId,
+            'activity' => $activityId,
+        ]));
     }
 
     public function testAuthenticatedUserCanJoinActivitySuccessfully(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
+        $activity = $this->CreateActivity();
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->postJson(route('user.activity.join', [
-            'user' => $this->user->id,
-            'activity' => $this->activity->id,
-        ]));
+        $response = $this->requestJoinActivity($user->id, $activity->id, $token);
 
         $response->assertStatus(200);
 
         $this->assertDatabaseHas('activity_user', [
-            'user_id' => $this->user->id,
-            'activity_id' => $this->activity->id,
+            'user_id' => $user->id,
+            'activity_id' => $activity->id,
         ]);
     }
 
     public function testCannotJoinActivityWhenNotAuthenticated(): void
     {
+        $user = $this->createUser(role: 'admin');
+        $activity = $this->CreateActivity();        
         $response = $this->postJson(route('user.activity.join', [
-            'user' => $this->user->id,
-            'activity' => $this->activity->id,
+            'user' => $user->id,
+            'activity' => $activity->id,
         ]));
 
         $response->assertStatus(401);
@@ -55,23 +60,13 @@ class JoinActivityTest extends TestCase
 
     public function testCannotJoinTheSameActivityTwice(): void
     {
-        $token = $this->user->createToken('authToken')->accessToken;
+        $user = $this->createUser(role: 'admin');
+        $token = $this->getUserToken($user);
+        $activity = $this->CreateActivity();
 
-        $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->postJson(route('user.activity.join', [
-            'user' => $this->user->id,
-            'activity' => $this->activity->id,
-        ]));
+        $this->requestJoinActivity($user->id, $activity->id, $token);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ])->postJson(route('user.activity.join', [
-            'user' => $this->user->id,
-            'activity' => $this->activity->id,
-        ]));
+        $response = $this->requestJoinActivity($user->id, $activity->id, $token);
 
         $response->assertStatus(409);
     }
