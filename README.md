@@ -21,13 +21,32 @@ Este proyecto consiste en una API REST diseñada para gestionar usuarios y activ
 ### 4. Importación de Actividades 📥
 - **Importar actividades desde un archivo JSON**: Permite cargar actividades desde un archivo JSON.
 
-### 5. Configuración de la Base de Datos 🗄️
+### 5. Roles de los usuarios 📜
+Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permisos, proporcionando una forma flexible y eficiente de controlar el acceso a las funcionalidades de la API.
+
+#### Rol User 🧑‍💻
+##### Puede
+-(siempre que sea el propietario de la cuenta):crear una cuenta, ver sus datos personales, editar sus datos personales, borrar su cuenta.
+-listar actividades y unirse a una actividad.
+- **No puede:** crear una actividad, editar una actividad, borrar una actividad, importar o exportar actividades.
+
+#### Rol Admin 👑 
+##### Puede
+-ver sus datos personales y el de cualquier usuario, editar sus datos y el de cualquier usuario, borrar su cuenta y el de cualquier usuario.
+-listar, editar, borrar, importar y exportar actividades.
+
+- **No puede:** crear una actividad, editar una actividad, borrar una actividad, importar o exportar actividades.
+
+### 6. Configuración de la Base de Datos 🗄️
 - Se ha establecido una conexión con una base de datos MySQL para almacenar los datos de usuarios, actividades y el registro de estos a una o varias actividades.
 
-### 6. Autenticación de Usuarios 🔑
+#### Rol Admin 👑 
+- **Puede:** 
+
+### 7. Autenticación de Usuarios 🔑
 - El proyecto utiliza **autenticación de usuarios con tokens** mediante **Passport**, asegurando que las operaciones sobre la API sean seguras y que solo los usuarios autenticados puedan acceder a las funciones protegidas.
 
-### 7. Test 🧪🔬
+### 8. Test 🧪🔬
 - Se empleó la metodología **TDD**, creando pruebas automatizadas antes del desarrollo del código funcional. Este enfoque asegura que cada funcionalidad esté respaldada por una prueba que verifica su correcto funcionamiento, promoviendo un diseño más limpio y reduciendo la probabilidad de errores. 
 
 ## Endpoints de la API 🔗
@@ -39,7 +58,9 @@ Este proyecto consiste en una API REST diseñada para gestionar usuarios y activ
 
 ### 2. Actividades
 - `POST /appActivities/activity`: Creación de una nueva actividad.
-- `GET /appActivities/activities/{activity}`: Consulta de una actividad.
+- `GET /appActivities/activity/{activity}`: Consulta de una actividad.
+- `PUT /appActivities/activity/{activity}`: Edicion de una actividad.
+- `DELETE /appActivities/activity/{activity}`: Consulta de una actividad.
 - `POST /appActivities/users/{user}/activities/{activity}`: un usuario se apunta a una actividad.
 
 ### 3. Importación/Exportación
@@ -75,9 +96,3 @@ Este proyecto consiste en una API REST diseñada para gestionar usuarios y activ
         "max_capacity": 30
     }
 ]
-
-// TODO: 
-// -Creara los test faltantes para delete y update activitie
-// -crear un trait para juntar los metodos comunes que se utilizan en los test
-// -Factorizar controllers.
-// -Crear un services para el user
