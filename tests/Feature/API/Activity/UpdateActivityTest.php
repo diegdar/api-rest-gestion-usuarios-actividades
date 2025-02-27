@@ -30,7 +30,7 @@ class UpdateActivityTest extends TestCase
 
     public function testCanUpdateActivity(): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
         $activityData = $activity->toArray();
@@ -50,7 +50,7 @@ class UpdateActivityTest extends TestCase
 
     public function testCannotUpdateNonExistentActivity(): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
         $dataToUpdate = [
             'name' => 'Updated Activity',
@@ -79,7 +79,7 @@ class UpdateActivityTest extends TestCase
 
     public function testCannotUpdateActivityWhenUserIsNotAnAdmin():void
     {
-        $user = $this->createUser(role: 'User');
+        $user = $this->createUser(role: 'user');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
         $dataToUpdate = [
@@ -96,7 +96,7 @@ class UpdateActivityTest extends TestCase
     #[DataProvider('activityValidationProvider')]
     public function testCanValidateActivityFields(array $invalidDataToUpdate, array $field): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
     

@@ -31,7 +31,7 @@ class ImportActivitiesTest extends TestCase
 
     private function requestImportActivities(array $data): TestResponse
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
 
         return $this->withHeaders([

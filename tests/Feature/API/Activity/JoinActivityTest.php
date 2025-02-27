@@ -32,7 +32,7 @@ class JoinActivityTest extends TestCase
 
     public function testAuthenticatedUserCanJoinActivitySuccessfully(): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
@@ -48,7 +48,7 @@ class JoinActivityTest extends TestCase
 
     public function testCannotJoinActivityWhenNotAuthenticated(): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $activity = $this->CreateActivity();        
         $response = $this->postJson(route('user.activity.join', [
             'user' => $user->id,
@@ -60,7 +60,7 @@ class JoinActivityTest extends TestCase
 
     public function testCannotJoinTheSameActivityTwice(): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 

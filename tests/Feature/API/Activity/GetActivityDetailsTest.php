@@ -29,7 +29,7 @@ class GetActivityDetailsTest extends TestCase
 
     public function testCanGetActivityDetailsSuccessfully(): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
@@ -50,7 +50,7 @@ class GetActivityDetailsTest extends TestCase
 
     public function testCannotGetActivityDetailsOfNonExistentActivity(): void
     {
-        $user = $this->createUser(role: 'Admin');
+        $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
 
         $response = $this->requestGetActivityDetails(9999, $token);

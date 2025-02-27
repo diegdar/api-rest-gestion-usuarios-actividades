@@ -29,7 +29,7 @@ class DeleteActivityTest extends TestCase
     
     public function testItCanDeleteActivitySuccessfully(): void
     {
-        $user = $this->createUser(role:'Admin');
+        $user = $this->createUser(role:'admin');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
@@ -71,7 +71,7 @@ class DeleteActivityTest extends TestCase
 
     public function testCannotDeleteActivityWhenUserIsNotAdmin(): void
     {
-        $user = $this->createUser(role: 'User');
+        $user = $this->createUser(role: 'user');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
