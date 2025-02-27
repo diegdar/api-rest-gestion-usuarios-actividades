@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
+use App\Helpers\UserTestHelper;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
@@ -12,19 +13,11 @@ use Tests\TestCase;
 
 class LoginUserTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, UserTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-    }
-
-    private function createUser(string $role = 'User'): User
-    {
-        return User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => bcrypt('Password&123'),
-        ])->assignRole($role);
     }
 
     private function requestLoginUser(string $email = 'test@example.com', string $password = 'Password&123'): TestResponse

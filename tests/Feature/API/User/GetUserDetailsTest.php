@@ -4,28 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
-use App\Models\User;
+use App\Helpers\UserTestHelper;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class GetUserDetailsTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, UserTestHelper;
     public function setUp(): void
     {
         parent::setUp();
     }
-
-    private function createUser(string $role = 'User'): User
-    {
-        return User::factory()->create()->assignRole($role);
-    }
-
-    private function getUserToken(User $user)
-    {
-        return $user->createToken('authToken')->accessToken;
-    }    
 
     private function requestGetUserDetails(int $userId = null, string $token = null): TestResponse
     {

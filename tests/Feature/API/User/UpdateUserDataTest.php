@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\User;
 
+use App\Helpers\UserTestHelper;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
@@ -12,19 +13,11 @@ use Tests\TestCase;
 
 class UpdateUserDataTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, UserTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-    }
-
-    private function createUser(string $email = 'test@example.com'): User
-    {
-        return User::factory()->create([
-            'email' => $email,
-            'password' => bcrypt('Password&123'),
-        ])->assignRole('User');
     }
 
     private function getUserData(User $user): array
