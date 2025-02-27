@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Activity;
-use App\Http\Requests\CreateActivityFormRequest;
+use App\Http\Requests\StoreActivityFormRequest;
 use Illuminate\Validation\ValidationException;
 
 class ActivityService
@@ -50,7 +50,7 @@ class ActivityService
         $errors = [];
 
         foreach ($activities as $index => $activity) {
-            $request = new CreateActivityFormRequest();
+            $request = new StoreActivityFormRequest();
             $request->merge($activity); // Pasar datos al FormRequest
 
             try {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateActivityFormRequest;
+use App\Http\Requests\StoreActivityFormRequest;
 use App\Http\Requests\UpdateActivityFormRequest;
 use App\Models\Activity;
 use App\Models\User;
@@ -21,7 +21,7 @@ class ActivityController extends Controller
         $this->activityService = $activityService;
     }
 
-    public function store(CreateActivityFormRequest $request): JsonResponse
+    public function store(StoreActivityFormRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $this->activityService->create($validated);
