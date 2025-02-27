@@ -36,7 +36,7 @@ class CreateActivityTest extends TestCase
     public function testCanCreateActivitySuccessfully(): void
     {
         $user = $this->createUser(role: 'Admin');
-        $token = $user->createToken('authToken')->accessToken;
+        $token = $this->getUserToken($user);
 
         $activityData = $this->CreateActivityData();
 
@@ -59,7 +59,7 @@ class CreateActivityTest extends TestCase
     public function testCanShowValidationErrorWhenActivityIsDuplicated(): void
     {
         $user = $this->createUser(role: 'Admin');
-        $token = $user->createToken('authToken')->accessToken;
+        $token = $this->getUserToken($user);
         $activityData = $this->CreateActivityData();
 
         $this->requestCreateActivity($activityData, $token);
@@ -73,7 +73,7 @@ class CreateActivityTest extends TestCase
     public function testCanShowValidationErrorWithInvalidData(array $invalidData, array $fieldName): void
     {
         $user = $this->createUser(role: 'Admin');
-        $token = $user->createToken('authToken')->accessToken;
+        $token = $this->getUserToken($user);
 
         $response = $this->requestCreateActivity($invalidData, $token);
 
