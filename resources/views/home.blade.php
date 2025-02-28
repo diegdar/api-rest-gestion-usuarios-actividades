@@ -141,6 +141,7 @@
                     </ul>
                 </ol>
             </div>
+            {{-- TODO: insertar los endpoints faltantes, texto descripcion de los roles --}}
             <!-- API endpoints -->
             <div>
                 <h2>Endpoints</h2>
