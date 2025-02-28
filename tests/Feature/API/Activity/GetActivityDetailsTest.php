@@ -19,7 +19,7 @@ class GetActivityDetailsTest extends TestCase
         parent::setUp();
     }
 
-    private function requestGetActivityDetails(int $activityId = null, string $token = null): TestResponse
+    private function requestGetActivityDetails(?int $activityId = null, ?string $token = null): TestResponse
     {
         return $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
