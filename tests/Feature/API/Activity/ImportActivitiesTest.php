@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
+use App\Helpers\ActivityTestHelper;
 use App\Helpers\UserTestHelper;
 use App\Models\Activity;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -13,7 +14,7 @@ use Tests\TestCase;
 
 class ImportActivitiesTest extends TestCase
 {
-    use DatabaseTransactions, UserTestHelper;
+    use DatabaseTransactions, UserTestHelper, ActivityTestHelper;
 
     protected function setUp(): void
     {
@@ -24,7 +25,7 @@ class ImportActivitiesTest extends TestCase
     {
         $activities = [];
         for ($i = 0; $i < $count; $i++) {
-            $activities[] = Activity::factory()->make()->toArray();
+            $activities[] = $this->createActivityData();
         }
         return $activities;
     }

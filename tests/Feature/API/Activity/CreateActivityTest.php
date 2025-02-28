@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\API\Activity;
 
+use App\Helpers\ActivityTestHelper;
 use App\Helpers\UserTestHelper;
 use App\Models\Activity;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -13,16 +14,11 @@ use Tests\TestCase;
 
 class CreateActivityTest extends TestCase
 {
-    use DatabaseTransactions, UserTestHelper;
+    use DatabaseTransactions, UserTestHelper, ActivityTestHelper;
 
     protected function setUp(): void
     {
         parent::setUp();
-    }
-
-    private function CreateActivityData(): array
-    {
-        return Activity::factory()->make()->toArray();
     }
 
     private function requestCreateActivity(array $activityData, string $token): TestResponse

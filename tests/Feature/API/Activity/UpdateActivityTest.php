@@ -20,7 +20,7 @@ class UpdateActivityTest extends TestCase
         parent::setUp();
     } 
 
-    private function requestUpdateActivity(int $activityId = null, string $token = null, array $dataToUpdate ): TestResponse
+    private function requestUpdateActivity(?int $activityId = null, ?string $token = null, array $dataToUpdate ): TestResponse
     {
         return $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
@@ -34,6 +34,8 @@ class UpdateActivityTest extends TestCase
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
         $activityData = $activity->toArray();
+        $activityData['start_date'] = $activityData['start_date']->format('Y-m-d');
+
         $dataToUpdate = [
             'name' => 'Updated Activity',
             'description' => 'This is an updated activity.',

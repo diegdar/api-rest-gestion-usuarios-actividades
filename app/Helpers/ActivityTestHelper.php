@@ -12,4 +12,11 @@ trait ActivityTestHelper
     {
         return Activity::factory()->create();
     }    
+
+    private function CreateActivityData(): array
+    {
+        $activityData = Activity::factory()->make()->toArray();
+        $activityData['start_date'] = $activityData['start_date']->format('Y-m-d');
+        return $activityData;
+    }    
 }

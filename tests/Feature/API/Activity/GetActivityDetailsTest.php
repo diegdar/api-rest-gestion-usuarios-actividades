@@ -19,7 +19,7 @@ class GetActivityDetailsTest extends TestCase
         parent::setUp();
     }
 
-    private function requestGetActivityDetails(int $activityId = null, string $token = null): TestResponse
+    private function requestGetActivityDetails(?int $activityId = null, ?string $token = null): TestResponse
     {
         return $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
@@ -32,11 +32,13 @@ class GetActivityDetailsTest extends TestCase
         $user = $this->createUser(role: 'admin');
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
+        $activityData = $activity->toArray();
+        $activityData['start_date'] = $activity->start_date->format('Y-m-d');
 
         $response = $this->requestGetActivityDetails($activity->id, $token);
 
         $response->assertStatus(200);
-        $response->assertJson(['activityData' => $activity->toArray()]);
+        $response->assertJson(['activityData' => $activityData]);
     }
 
     public function testCannotGetActivityDetailsWhenNotAuthenticated(): void

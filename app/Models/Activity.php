@@ -20,9 +20,9 @@ class Activity extends Model
         'start_date',
     ];
 
-    protected $casts = [
-        'start_date' => 'datetime:Y-m-d',
-    ];
+    // protected $casts = [
+    //     'start_date' => 'datetime:Y-m-d',
+    // ];
     
     
     public function users()
@@ -36,7 +36,7 @@ class Activity extends Model
             'name' => $this->name,
             'description' => $this->description,
             'max_capacity' => $this->max_capacity,
-            'start_date' => $this->start_date->format('Y-m-d'),
+            'start_date' => $this->start_date
         ];
     }    
 
