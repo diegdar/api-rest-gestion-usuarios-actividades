@@ -8,7 +8,7 @@ use App\Models\User;
 
 trait UserTestHelper
 {
-    private function createUser(string $email = 'test@example.com', string $role = 'User'): User
+    private function createUser(string $email = 'test@example.com', string $role = 'user'): User
     {
         return User::factory()->create([
             'email' => $email,

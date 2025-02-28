@@ -19,6 +19,12 @@ class Activity extends Model
         'max_capacity',
         'start_date',
     ];
+
+    protected $casts = [
+        'start_date' => 'datetime:Y-m-d',
+    ];
+    
+    
     public function users()
     {
         return $this->belongsToMany(User::class);
