@@ -19,7 +19,7 @@ class UserOwnershipMiddlewear
         $autheticatedUser = Auth::user();
 
         if ($autheticatedUser->id == $userIdFromUrl->id
-            || $autheticatedUser->hasRole('Admin')
+            || $autheticatedUser->hasRole('admin')
             ) 
         {
             return $next($request);
