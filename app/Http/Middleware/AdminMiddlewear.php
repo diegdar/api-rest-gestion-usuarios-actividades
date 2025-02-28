@@ -22,7 +22,7 @@ class AdminMiddlewear
         /** @var User|null $autheticatedUser */
         $autheticatedUser = Auth::user();    
 
-        if ($autheticatedUser->hasRole('Admin'))
+        if ($autheticatedUser->hasRole('admin'))
         {
             return $next($request);
         }
