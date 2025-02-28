@@ -20,9 +20,9 @@ class Activity extends Model
         'start_date',
     ];
 
-    protected $casts = [
-        'start_date' => 'datetime:Y-m-d',
-    ];
+    // protected $casts = [
+    //     'start_date' => 'datetime:Y-m-d',
+    // ];
     
     
     public function users()

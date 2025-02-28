@@ -34,6 +34,8 @@ class UpdateActivityTest extends TestCase
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
         $activityData = $activity->toArray();
+        $activityData['start_date'] = $activityData['start_date']->format('Y-m-d');
+
         $dataToUpdate = [
             'name' => 'Updated Activity',
             'description' => 'This is an updated activity.',
