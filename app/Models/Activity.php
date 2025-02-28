@@ -30,7 +30,7 @@ class Activity extends Model
             'name' => $this->name,
             'description' => $this->description,
             'max_capacity' => $this->max_capacity,
-            'start_date' => $this->start_date->format('Y-m-d'),
+            'start_date' => $this->start_date
         ];
     }    
 
