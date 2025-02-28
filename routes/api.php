@@ -25,8 +25,6 @@ use App\Http\Controllers\{
 |
 */
 
-// TODO: ver porque al borrar o actualizar un usuario laravel intenta redirigir a la vista de login y da status 404
-
 // Login and register
 Route::post('/register', [RegisterController::class, 'store'])->name('user.store');
 Route::post('/login', [LoginController::class, 'login'])->name('user.login');
