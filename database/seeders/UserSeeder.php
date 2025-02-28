@@ -39,6 +39,8 @@ class UserSeeder extends Seeder
             "password"=> bcrypt("1234%pasword"),
         ])->assignRole('user');
 
-        User::factory(10)->create()->assignRole('user');
+        User::factory(10)->create()->each(function (User $user) {
+            $user->assignRole('user');
+        });
     }
 }
