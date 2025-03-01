@@ -28,7 +28,8 @@ use App\Http\Controllers\{
 // Login and register
 Route::post('/register', [RegisterController::class, 'store'])->name('user.store');
 Route::post('/login', [LoginController::class, 'login'])->name('user.login');
-Route::middleware('auth:api')->prefix('/appActivities')->group(function () {
+Route::middleware('auth:api')->group(function () {
+// Route::middleware('auth:api')->prefix('/appActivities')->group(function () {
     // users' routes
     Route::middleware('User.Ownership')->prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])->name('user.details');

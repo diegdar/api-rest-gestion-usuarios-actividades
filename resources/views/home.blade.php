@@ -168,28 +168,26 @@
             <div>
                 <h2>Endpoints</h2>
                 <h3>Endpoints</h3>
-                <p>A continuación, se detallan los principales endpoints disponibles:</p>
+                <p>A continuación, se detallan los principales endpoints disponibles.</p>
+                <p>Para probar el enpoint se debe sustituir la {base_url} por el subdominio de la API, que en mi caso seria <strong> https://project-api-activities.diegochacondev.es/</strong> seguido del resto del endpoint. Por ejemplo para crear un usuario se debe poner: <code> https://project-api-activities.diegochacondev.es/api/register</code>, ademas de que en algunos habra que poner el user_id y/o el activity_id segun lo requiera.</p>
                 <ol>
                     <h5><li>Usuario</h5></li>
                     <ul>
-                        <li><code>POST /appActivities/register</code>: Registro de un nuevo usuario.</li>
-                        <li><code>PUT /appActivities/users/{user}</code>: Actualización de los datos de un usuario.</li>
-                        <li><code>GET /appActivities/users/{user}</code>: Consulta de la información de un usuario.</li>
-                        <li><code>DELETE /appActivities/users/{user}</code>: Eliminación de un usuario.</li>
+                        <li>Registro de un nuevo usuario (POST):<code> {base_url}/api/register</code></li>
+                        <li>Actualización de los datos de un usuario (PUT):<code> {base_url}/api/users/{user_id}</code></li>
+                        <li>Consulta de la información de un usuario (GET):<code> {base_url}/api/users/{user_id}</code></li>
+                        <li>Eliminación de un usuario (DELETE):<code> {base_url}/api/users/{user_id}</code></li>
                     </ul>
-                    <h5><li>Actividade</h5></li>
+                    <h5><li>Actividades</h5></li>
                     <ul>
-                        <li><code>POST /appActivities/activity</code>: Creación de una nueva actividad.</li>
-                        <li><code>GET /appActivities/activities/{activity}</code>: Consulta de una actividad.</li>
-                        <li><code>POST /appActivities/users/{user}/activities/{activity}</code>: Un usuario se
-                            apunta a una
-                            actividad.</li>
+                        <li>Creación de una nueva actividad (POST):<code> {base_url}/api/activity</code></li>
+                        <li>Consulta de una actividad (GET):<code> {base_url}/api/activities/{activity_id}</code></li>
+                        <li>Un usuario se apunta a una actividad (POST):<code>{base_url}/api/users/{user_id}/activities/{activity_id}</code></li>
                     </ul>
                     <h5><li>Importación/Exportació</h5></li>
                     <ul>
-                        <li><code>POST /import/activities</code>: Importar actividades desde un archivo JSON.
-                        </li>
-                        <li><code>GET /export/activities</code>: Exportar actividades en formato JSON.</li>
+                        <li>Importar actividades desde un archivo JSON (POST):<code>{base_url}/api/import/activities</code></li>
+                        <li>Exportar(listar) actividades en formato JSON (GET):<code>{base_url}/api/export/activities</code></li>
                     </ul>
                 </ol>
             </div>
