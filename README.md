@@ -99,8 +99,6 @@ Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permi
 
 /* TODO: 
 -ver porque al borrar o actualizar un usuario laravel intenta redirigir a la vista de login y da status 404.
--Ver porque no muestra un mensaje cuando un usuario con id diferente a su propietario no puede unirse a una actividad. 
--Refactorizar controllers.
 -Crear feature mostrar listado actividades a un usuario.
 -hacer rutas en plural
 */

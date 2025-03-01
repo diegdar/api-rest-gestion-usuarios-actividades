@@ -6,6 +6,8 @@ namespace App\Services;
 
 use App\Models\Activity;
 use App\Http\Requests\StoreActivityFormRequest;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
 class ActivityService
@@ -28,16 +30,6 @@ class ActivityService
     public function getActivityById(int $id): Activity
     {
         return Activity::findOrFail($id);
-    }
-
-    public function joinUserToActivity(int $userId, Activity $activity): bool
-    {
-        if ($activity->users()->where('user_id', $userId)->exists()) {
-            return false;
-        }
-
-        $activity->users()->attach($userId);
-        return true;
     }
 
     public function getAllActivities()
@@ -64,6 +56,5 @@ class ActivityService
 
         return $errors;
     }
-
 
 }
