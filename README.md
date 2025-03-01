@@ -24,24 +24,18 @@ Este proyecto consiste en una API REST diseñada para gestionar usuarios y activ
 ### 5. Roles de los usuarios 📜
 Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permisos, proporcionando una forma flexible y eficiente de controlar el acceso a las funcionalidades de la API.
 
-#### Rol User 🧑‍💻
+#### Role User 🧑‍💻
 ##### Puede
--(siempre que sea el propietario de la cuenta):crear una cuenta, ver sus datos personales, editar sus datos personales, borrar su cuenta.
--listar actividades y unirse a una actividad.
-- **No puede:** crear una actividad, editar una actividad, borrar una actividad, importar o exportar actividades.
+-crear, ver, editar y eliminar su propia cuenta; listar e inscribirse en actividades.
+- **No puede:** ver, crear, editar, borrar la cuenta de otro usuario; crear o importar actividades.
 
-#### Rol Admin 👑 
+#### Role Admin 👑 
 ##### Puede
 -ver sus datos personales y el de cualquier usuario, editar sus datos y el de cualquier usuario, borrar su cuenta y el de cualquier usuario.
--listar, editar, borrar, importar y exportar actividades.
-
-- **No puede:** crear una actividad, editar una actividad, borrar una actividad, importar o exportar actividades.
+-listar, editar, borrar, listar(exportar) e importar(guardar en la base de datos nuevos registros) actividades.
 
 ### 6. Configuración de la Base de Datos 🗄️
 - Se ha establecido una conexión con una base de datos MySQL para almacenar los datos de usuarios, actividades y el registro de estos a una o varias actividades.
-
-#### Rol Admin 👑 
-- **Puede:** 
 
 ### 7. Autenticación de Usuarios 🔑
 - El proyecto utiliza **autenticación de usuarios con tokens** mediante **Passport**, asegurando que las operaciones sobre la API sean seguras y que solo los usuarios autenticados puedan acceder a las funciones protegidas.
@@ -100,5 +94,7 @@ Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permi
 /* TODO: 
 -ver porque al borrar o actualizar un usuario laravel intenta redirigir a la vista de login y da status 404.
 -Crear feature mostrar listado actividades a un usuario.
--hacer rutas en plural
+-hacer rutas en plural.
+-Hacer que el role admin pueda crear otras cuentas admin.
+-Impedir que un admin pueda unirse a una actividad como usuario.
 */
