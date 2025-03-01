@@ -19,7 +19,7 @@ class JoinActivityTest extends TestCase
         parent::setUp();
     }
 
-    private function requestJoinActivity(int $userId = null, int $activityId = null, string $token = null): TestResponse
+    private function requestJoinActivity(?int $userId = null, ?int $activityId = null, ?string $token = null): TestResponse
     {
         return $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
@@ -32,7 +32,7 @@ class JoinActivityTest extends TestCase
 
     public function testAuthenticatedUserCanJoinActivitySuccessfully(): void
     {
-        $user = $this->createUser(role: 'admin');
+        $user = $this->createUser();
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
@@ -48,7 +48,7 @@ class JoinActivityTest extends TestCase
 
     public function testCannotJoinActivityWhenNotAuthenticated(): void
     {
-        $user = $this->createUser(role: 'admin');
+        $user = $this->createUser();
         $activity = $this->CreateActivity();        
         $response = $this->postJson(route('user.activity.join', [
             'user' => $user->id,
@@ -60,7 +60,7 @@ class JoinActivityTest extends TestCase
 
     public function testCannotJoinTheSameActivityTwice(): void
     {
-        $user = $this->createUser(role: 'admin');
+        $user = $this->createUser();
         $token = $this->getUserToken($user);
         $activity = $this->CreateActivity();
 
@@ -70,4 +70,5 @@ class JoinActivityTest extends TestCase
 
         $response->assertStatus(409);
     }
+
 }

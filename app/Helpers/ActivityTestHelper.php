@@ -8,15 +8,16 @@ use App\Models\Activity;
 
 trait ActivityTestHelper
 {
-    private function CreateActivity(): Activity
+    private function CreateActivity(array $attributes = []): Activity
     {
-        return Activity::factory()->create();
+        return Activity::factory()->create($attributes);
     }    
 
-    private function CreateActivityData(): array
+    private function CreateActivityData(array $attributes = []): array
     {
-        $activityData = Activity::factory()->make()->toArray();
+        $activityData = Activity::factory()->make($attributes)->toArray();
         $activityData['start_date'] = $activityData['start_date']->format('Y-m-d');
         return $activityData;
-    }    
+    }
+
 }
