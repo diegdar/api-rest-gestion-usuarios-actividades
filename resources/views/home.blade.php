@@ -60,6 +60,7 @@
                 <h2>Requisitos Técnicos</h2>
                 <h3>Requisitos Técnicos</h3>
                 <ol>
+                {{-- Gestión de Usuarios --}}
                     <h5><li>Gestión de Usuarios👨‍👩‍👦‍👦</h5></li>
                     <ul>
                         <li><strong>Registro de nuevos usuarios:</strong> Permite a un nuevo usuario crear una cuenta en el sistema
@@ -76,6 +77,7 @@
                             útil para administración y soporte dentro del sistema.
                         </li>
                     </ul>
+                {{-- Gestión de Actividades --}}
                     <h5><li>Gestión de Actividades📅</h5></li>
                     <ul>
                         <li><strong>Creación de nuevas actividades:</strong> Los administradores pueden definir y programar eventos o
@@ -90,6 +92,7 @@
                             eficiente.
                         </li>
                     </ul>
+                {{-- Importación/Exportación --}}
                     <h5><li>Importación/Exportación📥📤</h5></li>
                     <ul>
                         <li><strong>Importar actividades desde un archivo JSON:</strong> Facilita la carga masiva de actividades
@@ -105,6 +108,24 @@
                             externos.
                         </li>
                     </ul>
+                {{-- Roles --}}
+                    <h5><li>Roles de los usuarios 📜</h5></li>
+                    <p>Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permisos, proporcionando una forma flexible y eficiente de controlar el acceso a las funcionalidades de la API.
+                    </p>
+                    <ol>
+                      <li>
+                        <h6>Role User 🧑‍💻:</h6>
+                        <ul>
+                          <li><strong>Puede:</strong> crear, ver, editar y eliminar su propia cuenta; listar e inscribirse en actividades.</li>
+                          <li><strong>No puede:</strong> ver, crear, editar, borrar la cuenta de otro usuario; crear o importar actividades.</li>
+                        </ul>
+                      </li>
+                       <li><h6>Role Admin 🧑‍🎓:</h6></li>
+                        <ul>
+                            <li><strong>Puede:</strong> ver, editar y eliminar cualquier cuenta; crear, ver, editar, borrar actividades; importar y exportar actividades.</li>
+                        </ul>
+                    </ol>                    
+                {{-- Base de Datos --}}
                     <h5><li>Base de Datos🗄️</h5></li>
                     <ul>
                         <li style="list-style-type: none;">La API se integra con una base de datos MySQL para gestionar y
@@ -116,6 +137,7 @@
                             aseguran la integridad y consistencia de la información.
                         </li>
                     </ul>
+                {{-- Autenticación --}}
                     <h5><li>Autenticación🔐</h5></li>
                     <ul>
                         <li style="list-style-type: none;">Se implementa autenticación basada en tokens utilizando Laravel
@@ -128,6 +150,7 @@
                             datos sensibles y manteniendo la integridad de las operaciones.
                         </li>
                     </ul>
+                {{-- Test --}}
                     <h5><li>Test 🧪🔬</h5></li>
                     <ul>
                         <li style="list-style-type: none;">Se empleó la metodología TDD, creando pruebas automatizadas antes del
@@ -141,7 +164,6 @@
                     </ul>
                 </ol>
             </div>
-            {{-- TODO: insertar los endpoints faltantes, texto descripcion de los roles --}}
             <!-- API endpoints -->
             <div>
                 <h2>Endpoints</h2>
