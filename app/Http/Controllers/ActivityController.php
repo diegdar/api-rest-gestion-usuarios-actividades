@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateActivityFormRequest;
 use App\Models\Activity;
 use App\Models\User;
 use App\Services\ActivityService;
+use App\Services\JoinUserActivityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,9 @@ class ActivityController extends Controller
 {
     private ActivityService $activityService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct()
     {
-        $this->activityService = $activityService;
+        $this->activityService = new activityService();
     }
 
     public function store(StoreActivityFormRequest $request): JsonResponse
@@ -59,18 +60,12 @@ class ActivityController extends Controller
         ]);
     }
 
-    public function joinActivity(User $user, Activity $activity): JsonResponse
+    public function joinActivity(
+        JoinUserActivityService $joinUserActivity, User $user, Activity $activity
+    ): JsonResponse
     {
-        if (!$this->activityService->joinUserToActivity($user->id, $activity)) {
-            return response()->json([
-                'message' => 'El usuario ya está unido a esta actividad',
-            ], 409);
-        }
-
-        return response()->json([
-            'message' => 'El usuario se unió a la actividad correctamente',
-        ]);
-    }
+        return $joinUserActivity($user, $activity);
+    }    
 
     public function exportActivities(): JsonResponse
     {
