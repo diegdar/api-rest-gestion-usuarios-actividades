@@ -29,7 +29,6 @@ use App\Http\Controllers\{
 Route::post('/register', [RegisterController::class, 'store'])->name('user.store');
 Route::post('/login', [LoginController::class, 'login'])->name('user.login');
 Route::middleware('auth:api')->group(function () {
-// Route::middleware('auth:api')->prefix('/appActivities')->group(function () {
     // users' routes
     Route::middleware('User.Ownership')->prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])->name('user.details');
@@ -40,15 +39,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/{user}/activities/{activity}', [ActivityController::class, 'joinActivity'])->name('user.activity.join');
     });
 
-// activities
-    Route::get('/activity/{activity}', [ActivityController::class, 'show'])->name('activity.details');
-    Route::get('/export/activities', [ActivityController::class, 'exportActivities'])->name('activities.export');    
-
-    Route::middleware('admin.permissions')->prefix('/activity')->group(function () {
-        Route::post('/', [ActivityController::class, 'store'])->name('activity.create');
-        Route::put('/{activity}', [ActivityController::class, 'update'])->name('activity.update');
-        Route::delete('/{activity}', [ActivityController::class, 'destroy'])->name('activity.delete');
+    // activities
+    Route::prefix('/activities')->group(function () {
+        Route::get('/export', [ActivityController::class, 'exportActivities'])->name('activities.export');    
+        Route::get('/{activity}', [ActivityController::class, 'show'])->name('activity.details');    
+            Route::post('/', [ActivityController::class, 'store'])->name('activity.create');
+            Route::put('/{activity}', [ActivityController::class, 'update'])->name('activity.update');
+            Route::delete('/{activity}', [ActivityController::class, 'destroy'])->name('activity.delete');    
+        Route::middleware('admin.permissions')->post('/import', [ActivityController::class, 'importActivities'])->name('activities.import');
     });
-
-    Route::middleware('admin.permissions')->post('/import/activities', [ActivityController::class, 'importActivities'])->name('activities.import');
 });

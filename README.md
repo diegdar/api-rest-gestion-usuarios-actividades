@@ -45,21 +45,21 @@ Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permi
 
 ## Endpoints de la API 🔗
 ### 1. Usuarios
-- `POST /appActivities/register`: Registro de un nuevo usuario.
-- `PUT /appActivities/users/{user}`: Actualización de los datos de un usuario.
-- `GET /appActivities/users/{user}`: Consulta de la información de un usuario.
-- `DELETE /appActivities/users/{user}`: Eliminación de un usuario.
+- `POST {base_ul}/api/register`: Registro de un nuevo usuario.
+- `PUT {base_ul}/api/users/{user_id}`: Actualización de los datos de un usuario.
+- `GET {base_ul}/api/users/{user_id}`: Consulta de la información de un usuario.
+- `DELETE {base_ul}/api/users/{user_id}`: Eliminación de un usuario.
 
 ### 2. Actividades
-- `POST /appActivities/activity`: Creación de una nueva actividad.
-- `GET /appActivities/activity/{activity}`: Consulta de una actividad.
-- `PUT /appActivities/activity/{activity}`: Edicion de una actividad.
-- `DELETE /appActivities/activity/{activity}`: Consulta de una actividad.
-- `POST /appActivities/users/{user}/activities/{activity}`: un usuario se apunta a una actividad.
+- `POST {base_ul}/api/activities`: Creación de una nueva actividad.
+- `GET {base_ul}/api/activities/{activity_id}`: Consulta de una actividad.
+- `PUT {base_ul}/api/activities/{activity_id}`: Edicion de una actividad.
+- `DELETE {base_ul}/api/activities/{activity_id}`: Eliminacion de una actividad.
+- `POST {base_ul}/api/users/{user_id}/activities/{activity_id}`: un usuario se apunta a una actividad.
 
 ### 3. Importación/Exportación
-- `POST /import/activities`: Importar actividades desde un archivo JSON.
-- `GET /export/activities`: Exportar actividades en formato JSON.
+- `POST {base_url}/activities/import`: Importar actividades desde un archivo JSON.
+- `GET {base_url}/activities/export`: Exportar(listar) actividades en formato JSON.
 
 ## Formato del JSON 📄
 ```json
@@ -93,8 +93,6 @@ Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permi
 
 /* TODO: 
 -ver porque al borrar o actualizar un usuario laravel intenta redirigir a la vista de login y da status 404.
--Crear feature mostrar listado actividades a un usuario.
--hacer rutas en plural.
 -Hacer que el role admin pueda crear otras cuentas admin.
--Impedir que un admin pueda unirse a una actividad como usuario.
+-Impedir que un role admin pueda unirse a una actividad.
 */

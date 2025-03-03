@@ -116,7 +116,7 @@
                       <li>
                         <h6>Role User 🧑‍💻:</h6>
                         <ul>
-                          <li><strong>Puede:</strong> crear, ver, editar y eliminar su propia cuenta; listar e inscribirse en actividades.</li>
+                          <li><strong>Puede:</strong> crear, ver, editar y eliminar su propia cuenta; listar(exportar) e inscribirse en actividades.</li>
                           <li><strong>No puede:</strong> ver, crear, editar, borrar la cuenta de otro usuario; crear o importar actividades.</li>
                         </ul>
                       </li>
@@ -173,21 +173,23 @@
                 <ol>
                     <h5><li>Usuario</h5></li>
                     <ul>
-                        <li>Registro de un nuevo usuario (POST):<code> {base_url}/api/register</code></li>
-                        <li>Actualización de los datos de un usuario (PUT):<code> {base_url}/api/users/{user_id}</code></li>
-                        <li>Consulta de la información de un usuario (GET):<code> {base_url}/api/users/{user_id}</code></li>
-                        <li>Eliminación de un usuario (DELETE):<code> {base_url}/api/users/{user_id}</code></li>
+                        <li>Registro(creacion) de un nuevo usuario (POST):<code> {base_url}/api/register</code></li>
+                        <li>Editar datos de un usuario (PUT):<code> {base_url}/api/users/{user_id}</code></li>
+                        <li>Ver información de un usuario (GET):<code> {base_url}/api/users/{user_id}</code></li>
+                        <li>Eliminar un usuario (DELETE):<code> {base_url}/api/users/{user_id}</code></li>
                     </ul>
                     <h5><li>Actividades</h5></li>
                     <ul>
-                        <li>Creación de una nueva actividad (POST):<code> {base_url}/api/activity</code></li>
-                        <li>Consulta de una actividad (GET):<code> {base_url}/api/activities/{activity_id}</code></li>
+                        <li>Crear una nueva actividad (POST):<code> {base_url}/api/activities</code></li>
+                        <li>Ver una actividad (GET):<code> {base_url}/api/activities/{activity_id}</code></li>
+                        <li>Editar una actividad (PUT):<code> {base_url}/api/activities/{activity_id}</code></li>
+                        <li>Eliminar una actividad (DELETE):<code> {base_url}/api/activities/{activity_id}</code></li>
                         <li>Un usuario se apunta a una actividad (POST):<code>{base_url}/api/users/{user_id}/activities/{activity_id}</code></li>
                     </ul>
                     <h5><li>Importación/Exportació</h5></li>
                     <ul>
-                        <li>Importar actividades desde un archivo JSON (POST):<code>{base_url}/api/import/activities</code></li>
-                        <li>Exportar(listar) actividades en formato JSON (GET):<code>{base_url}/api/export/activities</code></li>
+                        <li>Importar actividades desde un archivo JSON (POST):<code>{base_url}/api/activities/import</code></li>
+                        <li>Exportar(listar) actividades en formato JSON (GET):<code>{base_url}/api/activities/export</code></li>
                     </ul>
                 </ol>
             </div>
