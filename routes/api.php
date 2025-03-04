@@ -41,11 +41,14 @@ Route::middleware('auth:api')->group(function () {
 
     // activities
     Route::prefix('/activities')->group(function () {
-        Route::get('/export', [ActivityController::class, 'exportActivities'])->name('activities.export');    
+        Route::get('/export', [ActivityController::class, 'exportActivities'])->name('activities.export'); 
         Route::get('/{activity}', [ActivityController::class, 'show'])->name('activity.details');    
-            Route::post('/', [ActivityController::class, 'store'])->name('activity.create');
+        Route::post('/', [ActivityController::class, 'store'])->name('activity.create');
+        
+        Route::middleware('admin.permissions')->group(function () {
             Route::put('/{activity}', [ActivityController::class, 'update'])->name('activity.update');
-            Route::delete('/{activity}', [ActivityController::class, 'destroy'])->name('activity.delete');    
-        Route::middleware('admin.permissions')->post('/import', [ActivityController::class, 'importActivities'])->name('activities.import');
+            Route::delete('/{activity}', [ActivityController::class, 'destroy'])->name('activity.delete');
+            Route::post('/import', [ActivityController::class, 'importActivities'])->name('activities.import');    
+        });
     });
 });
