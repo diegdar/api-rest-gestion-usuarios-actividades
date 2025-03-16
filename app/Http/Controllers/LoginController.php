@@ -8,9 +8,12 @@ use App\Http\Requests\LoginFormRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Traits\HasRoles;
 
 class LoginController extends Controller
 {
+    use HasRoles;
+
     public function login(LoginFormRequest $request): JsonResponse
     {
         $user = User::where('email', $request->email)->first();
@@ -26,6 +29,7 @@ class LoginController extends Controller
         $success['id'] = $user->id;
         $success['name'] = $user->name;
         $success['surname'] = $user->surname;
+        $success['role'] = $user->getRoleNames();
         $success['token'] = $user->createToken('MyApp')->accessToken;
 
         return $this->sendResponse($success, 'User login successfully');
