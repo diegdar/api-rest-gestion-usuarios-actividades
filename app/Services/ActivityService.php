@@ -6,8 +6,7 @@ namespace App\Services;
 
 use App\Models\Activity;
 use App\Http\Requests\StoreActivityFormRequest;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\ActivityResource;
 use Illuminate\Validation\ValidationException;
 
 class ActivityService
@@ -34,7 +33,7 @@ class ActivityService
 
     public function getAllActivities()
     {
-        return Activity::all();
+        return ActivityResource::collection(Activity::query()->OrderBy('start_date', 'desc'));
     }
 
     public function storeActivities(array $activities): array

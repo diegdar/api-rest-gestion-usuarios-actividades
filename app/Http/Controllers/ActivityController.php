@@ -27,8 +27,7 @@ class ActivityController extends Controller
      */
     public function store(StoreActivityFormRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $this->activityService->create($validated);
+        $this->activityService->create($request->validated());
 
         return response()->json(['message' => 'La actividad se ha creado correctamente']);
     }
@@ -61,15 +60,7 @@ class ActivityController extends Controller
     {
         $activity = $this->activityService->getActivityById((int) $id);
 
-        return response()->json([
-            'activityData' => [
-                'id' => $activity->id,
-                'name' => $activity->name,
-                'description' => $activity->description,
-                'max_capacity' => $activity->max_capacity,
-                'start_date' => $activity->start_date,
-            ],
-        ]);
+        return response()->json([$activity]);
     }
 
     /**

@@ -38,7 +38,7 @@ class GetActivityDetailsTest extends TestCase
         $response = $this->requestGetActivityDetails($activity->id, $token);
 
         $response->assertStatus(200);
-        $response->assertJson(['activityData' => $activityData]);
+        $response->assertJson([$activityData]);
     }
 
     public function testCannotGetActivityDetailsWhenNotAuthenticated(): void
