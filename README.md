@@ -92,7 +92,6 @@ Se ha utilizado la librería Spatie de Laravel para la gestión de roles y permi
 ]
 
 /* TODO: 
--ver porque al borrar o actualizar un usuario laravel intenta redirigir a la vista de login y da status 404.
 -Hacer que el role admin pueda crear otras cuentas admin.
 -Impedir que un role admin pueda unirse a una actividad.
 */
