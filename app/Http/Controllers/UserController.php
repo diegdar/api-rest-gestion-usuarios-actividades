@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    /**
+     * Display the specified user.
+     */
     public function show(User $user): JsonResponse
     {
         return response()->json([
@@ -24,6 +27,9 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified user in storage.
+     */
     public function update(UpdateUserFormRequest $request, User $user): JsonResponse
     {
         $validated = $request->validated();
@@ -32,6 +38,9 @@ class UserController extends Controller
         return response()->json(['message' => 'updated successfully']);
     }
 
+    /**
+     * Remove the specified user from storage.
+     */
     public function destroy(User $user): JsonResponse
     {
         $user->delete();
