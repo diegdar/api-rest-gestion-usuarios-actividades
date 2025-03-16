@@ -10,6 +10,9 @@ use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
+    /**
+     * Register a new user.
+     */
     public function store(RegisterFormRequest $request): JsonResponse
     {
         $input = $request->validated();

@@ -14,6 +14,9 @@ class LoginController extends Controller
 {
     use HasRoles;
 
+    /**
+     * Login user.
+     */
     public function login(LoginFormRequest $request): JsonResponse
     {
         $user = User::where('email', $request->email)->first();
