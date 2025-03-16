@@ -22,6 +22,9 @@ class ActivityController extends Controller
         $this->activityService = new activityService();
     }
 
+    /**
+     * Store a newly created activity in storage.
+     */
     public function store(StoreActivityFormRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -30,6 +33,9 @@ class ActivityController extends Controller
         return response()->json(['message' => 'La actividad se ha creado correctamente']);
     }
 
+    /**
+     * Update the specified activity in storage.
+     */
     public function update(UpdateActivityFormRequest $request, Activity $activity): JsonResponse
     {
         $validated = $request->validated();
@@ -38,6 +44,9 @@ class ActivityController extends Controller
         return response()->json(['message' => 'La actividad se ha actualizado correctamente']);
     }
 
+    /**
+     * Remove the specified activity from storage.
+     */
     public function destroy(Activity $activity): JsonResponse
     {
         $this->activityService->destroy($activity);
@@ -45,6 +54,9 @@ class ActivityController extends Controller
         return response()->json(['message' => 'La actividad se ha eliminado correctamente']);
     }
 
+    /**
+     * Display the specified activity.
+     */
     public function show($id): JsonResponse
     {
         $activity = $this->activityService->getActivityById((int) $id);
@@ -60,18 +72,27 @@ class ActivityController extends Controller
         ]);
     }
 
+    /**
+     * Join the specified activity.
+     */
     public function joinActivity(
         JoinUserActivityService $joinUserActivity, User $user, Activity $activity
     ): JsonResponse
     {
         return $joinUserActivity($user, $activity);
-    }    
+    }
 
+    /**
+     * Export all activities.
+     */
     public function exportActivities(): JsonResponse
     {
         return response()->json($this->activityService->getAllActivities());
     }
 
+    /**
+     * Import activities from JSON.
+     */
     public function importActivities(Request $request): JsonResponse
     {
         // Validate JSON format
