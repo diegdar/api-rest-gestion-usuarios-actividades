@@ -12,6 +12,7 @@ class RegisterController extends Controller
 {
     /**
      * Register a new user.
+     * @unauthenticated
      */
     public function store(RegisterFormRequest $request): JsonResponse
     {

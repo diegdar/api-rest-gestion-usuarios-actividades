@@ -16,6 +16,7 @@ class LoginController extends Controller
 
     /**
      * Login user.
+     * @unauthenticated
      */
     public function login(LoginFormRequest $request): JsonResponse
     {
