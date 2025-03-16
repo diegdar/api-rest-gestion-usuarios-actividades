@@ -8,19 +8,21 @@ use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Traits\HasRoles;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserOwnershipMiddlewear
 {
+    use HasRoles;
     public function handle(Request $request, Closure $next)
     {
-        $userIdFromUrl = $request->route('user'); // get the {user} of the URL        
-        /** @var User|null $autheticatedUser */
-        $autheticatedUser = Auth::user();
+        $userIdFromUrl = $request->route('user'); // get the {user} of the URL
 
-        if ($autheticatedUser->id == $userIdFromUrl->id
-            || $autheticatedUser->hasRole('admin')
-            ) 
+        $authenticatedUser = Auth::user();
+
+        if ($authenticatedUser->id == $userIdFromUrl->id
+            || $authenticatedUser->hasRole('admin')
+            )
         {
             return $next($request);
         }
